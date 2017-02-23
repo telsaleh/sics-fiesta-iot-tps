@@ -1,125 +1,80 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package uk.ac.surrey.ee.iot.smartics.endpoint.restlet.resource;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.*;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.restlet.Client;
+import org.restlet.Context;
 import org.restlet.data.MediaType;
+import org.restlet.data.Protocol;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
-import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ServerResource;
-import uk.ac.surrey.ee.iot.smartics.annotator.IotNodeDataAnnotator;
-import uk.ac.surrey.ee.iot.smartics.model.fiesta.Context;
-import uk.ac.surrey.ee.iot.smartics.model.fiesta.Graph;
-import uk.ac.surrey.ee.iot.smartics.model.fiesta.IotNodeReading;
-import uk.ac.surrey.ee.iot.smartics.model.reduce.IotNode;
+import uk.ac.surrey.ee.iot.smartics.annotator.FiestaAnnotator;
+import uk.ac.surrey.ee.iot.smartics.model.ics.Observations;
 
-/**
- * Resource which has only one representation.
- */
 public class ProxyHandler extends ServerResource {
 
-    public String iotNodeURL = "http://131.227.92.112:8080/SmartCCSR-testbed/restful-services/REDUCE/json/sensors/";
+    public String smartIcsURL = "http://131.227.88.96:5000/getLastObservations";
+//    public String smartIcsURL = "http://131.227.92.112/smart-ics/getLastObservations";
 
-    @Get
-    public Representation handleLookup() {
+//    @Get("txt")
+//    public String toString() {
+//        return "Account of user \"" + "TEST" + "\"";
+//    }
+    @Post("json")
+    public Representation handlePost(Representation entity) throws IOException {
 
-        String nodeId = (String) getRequest().getAttributes().get("node_id");
-        String quantityId = (String) getRequest().getAttributes().get("quantity_kind");
-        String resURI = getRequest().getResourceRef().toUri().toString();
-
-//        int ind = resURI.lastIndexOf("/");
-//        resURI = new StringBuilder(resURI).replace(ind, ind + 1, "#").toString();
-//        System.out.println(resURI);
-        System.out.println("HELLO: " + resURI);
-
-        String result = getIotNodeObservation(nodeId, quantityId);
-        StringRepresentation resultInFormat = new StringRepresentation(result);
-        resultInFormat.setMediaType(MediaType.APPLICATION_JSON);
-        return resultInFormat;
+        String tpsRequest = entity.getText();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        String result = getSmartIcsObservation(tpsRequest);
+        StringRepresentation response = new StringRepresentation(result);
+        response.setMediaType(MediaType.APPLICATION_JSON);
+        
+        return response;
     }
 
-    public String getIotNodeObservation(String nodeId, String quantityId) {
+    public String getSmartIcsObservation(String tpsRequest) {
 
-        String datasetUrl = iotNodeURL + nodeId;
-        ClientResource smartIcsClientResource = new ClientResource(datasetUrl);
-        InputStream is = null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+
+        final Context context = new Context();
+        Client client = new Client(new Context(), Protocol.HTTP);
+        client.getContext().getParameters().add("maxConnectionsPerHost", "5");
+        client.getContext().getParameters().add("maxTotalConnections", "5");
+        final ClientResource smartIcsClientResource = new ClientResource(context, smartIcsURL);
+        smartIcsClientResource.setNext(client);
+        smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
+        System.out.println("TPS request: " + tpsRequest);
+        Representation result = null;
+        String errorMessage="";
         try {
-            //glaClientResource.get().write(System.out);
-            is = smartIcsClientResource.get().getStream();
-        } catch (IOException ex) {
-            Logger.getLogger(ProxyHandler.class.getName()).log(Level.SEVERE, null, ex);
+            result = smartIcsClientResource
+                    .post(new StringRepresentation(tpsRequest, MediaType.APPLICATION_JSON));
+            smartIcsClientResource.release();
+            try {
+                Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
+                FiestaAnnotator fa = new FiestaAnnotator();
+                String annotatedOb = fa.annotateObservations(obs);               
+                return annotatedOb;
+            } catch (IOException ex) {
+                Logger.getLogger(ProxyHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (Exception ex) {
+//            Logger.getLogger(ProxyHandler.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("ERROR IS THIS: " + ex.getLocalizedMessage()); 
+            errorMessage = ex.getLocalizedMessage();
         }
-        Reader jsonReader = new InputStreamReader(is);
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        JsonElement jeDataset = new JsonParser().parse(jsonReader);
-        JsonArray jeArray = jeDataset.getAsJsonArray();
+        return errorMessage;
         
-        if (jeArray.size()<1)
-            return gson.toJson(jeDataset);
-        
-        JsonObject joDataset = jeArray.get(0).getAsJsonObject();
-
-        IotNode iotNode = gson.fromJson(joDataset, IotNode.class);
-       
-        String timeStamp = iotNode.getReading().getTimeStamp();
-        
-        Instant instant = Instant.now();
-        instant.minusSeconds(120);
-        timeStamp = instant.toString();
-        
-        String value = "";
-        double valueInt=0.0;
-
-        switch (quantityId) {
-            case "temperature":
-                valueInt = iotNode.getReading().getTemp();
-                value = String.valueOf((((valueInt - 1.9237)/1651.6) - 0.5)/0.01) ;
-                break;
-            case "power":
-                value = String.valueOf(iotNode.getReading().getWatts());
-                break;
-            case "illuminance":
-                value = String.valueOf(iotNode.getReading().getLight());
-                break;
-            case "sound":
-                value = String.valueOf(iotNode.getReading().getMic());
-                break;
-            case "presence":
-                value = String.valueOf(iotNode.getReading().getPIR());
-                break;
-            default:
-                value = String.valueOf(0);
-                break;
-        }
-        
-        IotNodeDataAnnotator ri = new IotNodeDataAnnotator();
-        String iotNodeResp = ri.annotateObservation(nodeId, quantityId, value, timeStamp);  
-        
-        JsonElement jeResult = new JsonParser().parse(iotNodeResp);
-        iotNodeResp = gson.toJson(jeResult);
-        
-        //gson.toJson(iotNode);//        System.out.println("GLA CKAN in Hypercat:\n" + hcJson);
-
-        return iotNodeResp;
-
     }
 
 }

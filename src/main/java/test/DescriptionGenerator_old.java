@@ -21,9 +21,9 @@ import org.apache.jena.util.iterator.ExtendedIterator;
  *
  * @author te0003
  */
-public class DescriptionGenerator {
+public class DescriptionGenerator_old {
 
-    public DescriptionGenerator() {
+    public DescriptionGenerator_old() {
     }
 
     public String IOT_LITE_PREFIX = "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#";
@@ -75,7 +75,7 @@ public class DescriptionGenerator {
         Property hasCoverage = ontModel.getProperty(IOT_LITE_PREFIX + "hasCoverage");
         Property hasPoint = ontModel.getProperty(IOT_LITE_PREFIX + "hasPoint");
 
-        String[] quantityKinds = {"Temperature", "Illuminance", "Sound", "Presence", "Power"};
+        String[] quantityKinds = {"Temperature"};//, "Illuminance", "Sound", "Presence", "Power"};
         String[] units = {"DegreeCelsius", "Lux", "Decibel", "Boolean", "Watt"};
         final int sensorSetSize = quantityKinds.length;
 //        long deskCount = 10; //200 //real number is 184
@@ -193,16 +193,16 @@ public class DescriptionGenerator {
             mIndividuals.add(indv.getOntModel());
 
         }
-        mIndividuals.remove(iotLiteOnt).write(System.out, "TURTLE");
-//  mIndividuals.remove(iotLiteOnt).write(System.out, "JSON-LD");  
+//        mIndividuals.remove(iotLiteOnt).write(System.out, "TURTLE");
+  mIndividuals.remove(iotLiteOnt).write(System.out, "JSON-LD");  
 //  mIndividuals.remove(iotLiteOnt).write(System.out, "RDF/XML");
 
     }
 
     public static void main(String[] args) throws JAXBException {
 
-        DescriptionGenerator ri = new DescriptionGenerator();
-        long datasetSize = 500;
+        DescriptionGenerator_old ri = new DescriptionGenerator_old();
+        long datasetSize = 1;
         ri.createDataset(datasetSize);
     }
 

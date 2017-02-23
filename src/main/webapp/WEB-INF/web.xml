@@ -17,10 +17,10 @@
             <param-name>org.restlet.application</param-name>
             <param-value>uk.ac.surrey.ee.iot.smartics.endpoint.restlet.RestReqApplication</param-value>
         </init-param>
-        <init-param>
+<!--        <init-param>
             <param-name>org.restlet.clients</param-name>
             <param-value>HTTP HTTPS FILE</param-value>
-        </init-param>
+        </init-param>-->
     </servlet>
     <servlet-mapping>
         <servlet-name>RestletServlet</servlet-name>
