@@ -1,4 +1,4 @@
-package test;
+package uk.ac.surrey.ee.iot.smartics.annotator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
