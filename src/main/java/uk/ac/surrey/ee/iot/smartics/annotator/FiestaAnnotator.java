@@ -38,7 +38,7 @@ public class FiestaAnnotator {
 
     //prefixes
     public String INDV_NS_PREFIX = "http://iot.ee.surrey.ac.uk/smartcampus#";
-    
+
     //location
     public String LOCATION = "ICS";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
@@ -55,8 +55,15 @@ public class FiestaAnnotator {
         Model tpsModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         Model fiestOnt = FileManager.get().loadModel(ontFilePath);
 
+        try{
         //iterate over observations
         for (Observation ob : obs.getObservations()) {
+
+            try{
+//            if (ob == null) {
+//                continue; // or break, whatever is better in your case
+//            }
+            
 
             OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
             ontModel.setStrictMode(true);
@@ -168,6 +175,13 @@ public class FiestaAnnotator {
             }
             mIndividuals.remove(fiestOnt);
             tpsModel.add(mIndividuals);
+            
+            }catch(NullPointerException npe){
+                System.out.println("null returned from smart-ics...");
+            }
+        }
+        }catch(NullPointerException npe){
+        System.out.println("null returned from smart-ics1...");
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -209,7 +223,6 @@ public class FiestaAnnotator {
 //        obsArray.add(ob);
 //        Observations obs = new Observations(); 
 //        obs.setObservations(obsArray);
-
         FiestaAnnotator ri = new FiestaAnnotator();
         String result = ri.annotateObservations(obs);
         System.out.println(result);

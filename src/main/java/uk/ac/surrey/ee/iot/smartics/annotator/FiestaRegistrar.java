@@ -57,7 +57,7 @@ public class FiestaRegistrar {
             OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
             ontModel.setStrictMode(true);
             ontModel.add(fiestOnt);
-            //ontology prefixes
+            //prefixes
             ontModel.setNsPrefix("sc", INDV_NS_PREFIX);
             ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
             ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
@@ -127,64 +127,36 @@ public class FiestaRegistrar {
             //unit individual
             Individual unitIndiv = ontModel.createIndividual(M3_LITE_PREFIX + res.getUnit(), unitClass);
             sensorDevIndiv.setPropertyValue(hasUnit, unitIndiv);
+            
             //smart-ics area
             //51.243503, -0.593393 (NW)         51.243502, -0.592990 (NE)
-            //51.243441, -0.593393              51.243439, -0.592990
             //51.243378, -0.593393 (W)          51.243376, -0.592990 (E)
-            //51.243
             //51.243253, -0.593393 (SW)         51.243250, -0.592990 (SE)
             //
-//            double lat = ThreadLocalRandom.current().nextDouble(51.243223, 51.243512);
-//            double lon = ThreadLocalRandom.current().nextDouble(-0.593416, -0.592964);
-//location individual
-Individual locationIndiv = ontModel.createIndividual(INDV_NS_PREFIX + locNamePrefix + LOCATION, locationClass);
-platformIndiv.setPropertyValue(geoLocation, locationIndiv);
-locationIndiv.setPropertyValue(RelativeLocation, ontModel.createLiteral(RELATIVE_LOCATION));
-locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(res.getLat()));
-locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(res.getLon()));
-//service individual
-Individual serviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + servNamePrefix + res.getResourceId(), serviceClass);
-sensorDevIndiv.setPropertyValue(exposedBy, serviceIndiv);
-serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(endpointPrefix + res.getDeviceId().toLowerCase() + "/" + res.getQk().toLowerCase()));
-//coverage points individuals
-//                Individual coverageLocIndiv1 = ontModel.createIndividual(INDV_NS + covNamePrefix +"1"+  locNamePrefix + deskNumber, locationClass);
-//                coverageLocIndiv1.setPropertyValue(ontModel.getProperty(iotLiteOnt.getNsPrefixURI("geo") + "lat"), ontModel.createLiteral("51.401"));
-//                coverageLocIndiv1.setPropertyValue(ontModel.getProperty(iotLiteOnt.getNsPrefixURI("geo") + "long"), ontModel.createLiteral("-0.511"));
-//            
-//                Individual coverageLocIndiv2 = ontModel.createIndividual(INDV_NS + covNamePrefix +"2"+ locNamePrefix + deskNumber, locationClass);
-//                coverageLocIndiv2.setPropertyValue(ontModel.getProperty(iotLiteOnt.getNsPrefixURI("geo") + "lat"), ontModel.createLiteral("51.402"));
-//                coverageLocIndiv2.setPropertyValue(ontModel.getProperty(iotLiteOnt.getNsPrefixURI("geo") + "long"), ontModel.createLiteral("-0.512"));
-//                
-//                //coverage individual
-//                Individual coverageIndiv = ontModel.createIndividual(INDV_NS + covNamePrefix + deskNumber, coverageClass);
-//                sensorIndiv.setPropertyValue(ontModel.getProperty(BASE_ONT_NS + "hasCoverage"), coverageIndiv); 
-//                coverageIndiv.setPropertyValue(ontModel.getProperty(BASE_ONT_NS + "hasPoint"), coverageLocIndiv1);
-//                coverageIndiv.addProperty(ontModel.getProperty(BASE_ONT_NS + "hasPoint"), coverageLocIndiv2);
-//        }
-//            Instant postDataGen = Instant.now();
-//            final long dgDuration = postDataGen.toEpochMilli() - preDataGen.toEpochMilli();
-//        System.out.println("\nModel Individuals");
-//        System.out.println("--------------------------------------------------");
-//        ExtendedIterator<Individual> iter3 = ontModel.listIndividuals();
-//        while (iter3.hasNext()) {
-//            Individual ontIndiv = iter3.next();
-//            System.out.println(ontIndiv.getURI());
-//        }
-//        System.out.println("Model Instances");
-//        System.out.println("--------------------------------------------------");
-//        ontModel.write(System.out, "RDF/XML-ABBREV");
-//        ontModel.write(System.out, "RDF/XML");
-//        ontModel.write(System.out, "TURTLE");
-//        ontModel.write(System.out, "JSON-LD");
-Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
-ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
-while (iterIndv.hasNext()) {
-    Individual indv = (Individual) iterIndv.next();
-    mIndividuals.add(indv.getOntModel());
-}
-mIndividuals.remove(fiestOnt);//.write(System.out, "JSON-LD");
-tpsModel.add(mIndividuals);
+            // double lat = ThreadLocalRandom.current().nextDouble(51.243223, 51.243512);
+            // double lon = ThreadLocalRandom.current().nextDouble(-0.593416, -0.592964);
+            
+            //location individual
+            Individual locationIndiv = ontModel.createIndividual(INDV_NS_PREFIX + locNamePrefix + LOCATION, locationClass);
+            platformIndiv.setPropertyValue(geoLocation, locationIndiv);
+            locationIndiv.setPropertyValue(RelativeLocation, ontModel.createLiteral(RELATIVE_LOCATION));
+            locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(res.getLat()));
+            locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(res.getLon()));
+            //service individual
+            Individual serviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + servNamePrefix + res.getResourceId(), serviceClass);
+            sensorDevIndiv.setPropertyValue(exposedBy, serviceIndiv);
+            serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(endpointPrefix + res.getDeviceId().toLowerCase() + "/" + res.getQk().toLowerCase()));
+
+            //extract prefixes and instances
+            Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+            mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
+            ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
+            while (iterIndv.hasNext()) {
+                Individual indv = (Individual) iterIndv.next();
+                mIndividuals.add(indv.getOntModel());
+            }
+            mIndividuals.remove(fiestOnt);//.write(System.out, "JSON-LD");
+            tpsModel.add(mIndividuals);
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

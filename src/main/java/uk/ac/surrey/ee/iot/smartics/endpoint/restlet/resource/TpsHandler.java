@@ -14,14 +14,14 @@ import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.Post;
+import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaAnnotator;
 import uk.ac.surrey.ee.iot.smartics.model.ics.Observations;
 
-public class ProxyHandler extends ServerResource {
+public class TpsHandler extends ServerResource {
 
-    public String smartIcsURL = "http://131.227.88.96:5000/getLastObservations";
-//    public String smartIcsURL = "http://131.227.92.112/smart-ics/getLastObservations";
+    public String sIcsURL = "http://131.227.88.96:5000/getLastObservations";
 
 //    @Get("txt")
 //    public String toString() {
@@ -50,26 +50,27 @@ public class ProxyHandler extends ServerResource {
         Client client = new Client(new Context(), Protocol.HTTP);
         client.getContext().getParameters().add("maxConnectionsPerHost", "5");
         client.getContext().getParameters().add("maxTotalConnections", "5");
-        final ClientResource smartIcsClientResource = new ClientResource(context, smartIcsURL);
+        final ClientResource smartIcsClientResource = new ClientResource(context, sIcsURL);
         smartIcsClientResource.setNext(client);
         smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
         System.out.println("TPS request: " + tpsRequest);
-        Representation result = null;
         String errorMessage="";
         try {
-            result = smartIcsClientResource
+            Representation result = smartIcsClientResource
                     .post(new StringRepresentation(tpsRequest, MediaType.APPLICATION_JSON));
             smartIcsClientResource.release();
-            try {
-                Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
-                FiestaAnnotator fa = new FiestaAnnotator();
-                String annotatedOb = fa.annotateObservations(obs);               
+//            try {
+//                Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
+//                FiestaAnnotator fa = new FiestaAnnotator();
+//                String annotatedOb = fa.annotateObservations(obs);               
+                String annotatedOb = "OK";
                 return annotatedOb;
-            } catch (IOException ex) {
-                Logger.getLogger(ProxyHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (Exception ex) {
-//            Logger.getLogger(ProxyHandler.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (IOException ioex) {
+//                Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ioex);
+//                System.out.println("IO Error....ERROR IS THIS: " + ioex.getLocalizedMessage()); 
+//            }
+        } catch (ResourceException ex) {
+            Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("ERROR IS THIS: " + ex.getLocalizedMessage()); 
             errorMessage = ex.getLocalizedMessage();
         }
