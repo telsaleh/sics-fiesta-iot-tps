@@ -59,16 +59,16 @@ public class TpsHandler extends ServerResource {
             Representation result = smartIcsClientResource
                     .post(new StringRepresentation(tpsRequest, MediaType.APPLICATION_JSON));
             smartIcsClientResource.release();
-//            try {
-//                Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
-//                FiestaAnnotator fa = new FiestaAnnotator();
-//                String annotatedOb = fa.annotateObservations(obs);               
-                String annotatedOb = "OK";
+            try {
+                Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
+                FiestaAnnotator fa = new FiestaAnnotator();
+                String annotatedOb = fa.annotateObservations(obs);               
+//                String annotatedOb = "OK";
                 return annotatedOb;
-//            } catch (IOException ioex) {
-//                Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ioex);
-//                System.out.println("IO Error....ERROR IS THIS: " + ioex.getLocalizedMessage()); 
-//            }
+            } catch (IOException ioex) {
+                Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ioex);
+                System.out.println("IO Error....ERROR IS THIS: " + ioex.getLocalizedMessage()); 
+            }
         } catch (ResourceException ex) {
             Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("ERROR IS THIS: " + ex.getLocalizedMessage()); 
