@@ -32,7 +32,7 @@ public class FiestaRegistrar {
 
     //prefixes
     public String INDV_NS_PREFIX = "http://iot.ee.surrey.ac.uk/smartcampus#";
-    public String ENDPOINT_PREFIX = "http://iot.ee.surrey.ac.uk/smart-ics/";
+    public String ENDPOINT_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/service/";
 
     //location
     public String LOCATION = "ICS";
@@ -98,7 +98,6 @@ public class FiestaRegistrar {
             String deviceNamePrefix = "urn:x-iot:s-ics:";
             String platformNamePrefix = "urn:x-iot:s-ics:plat:";
             String servNamePrefix = "urn:x-iot:s-ics:serivce:";
-            String endpointPrefix = "urn:x-iot:s-ics:endp:";
             String unitPrefix = "urn:x-iot:s-ics:unit:";
             String locNamePrefix = "urn:x-iot:s-ics:loc:";
             Instant preDataGen = Instant.now();
@@ -145,7 +144,7 @@ public class FiestaRegistrar {
             //service individual
             Individual serviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + servNamePrefix + res.getResourceId(), serviceClass);
             sensorDevIndiv.setPropertyValue(exposedBy, serviceIndiv);
-            serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(endpointPrefix + res.getDeviceId().toLowerCase() + "/" + res.getQk().toLowerCase()));
+            serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(ENDPOINT_PREFIX + res.getResourceId().toLowerCase()));
 
             //extract prefixes and instances
             Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
