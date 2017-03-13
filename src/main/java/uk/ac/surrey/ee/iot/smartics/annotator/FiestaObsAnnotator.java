@@ -20,16 +20,16 @@ import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import uk.ac.surrey.ee.iot.smartics.endpoint.servlet.DefaultServletListener;
-import uk.ac.surrey.ee.iot.smartics.model.ics.Observation;
-import uk.ac.surrey.ee.iot.smartics.model.ics.Observations;
+import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observation;
+import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 /**
  *
  * @author te0003
  */
-public class FiestaAnnotator {
+public class FiestaObsAnnotator {
 
-    public FiestaAnnotator() {
+    public FiestaObsAnnotator() {
     }
 
     //reference ontologies
@@ -83,7 +83,7 @@ public class FiestaAnnotator {
 
             //classes
             OntClass observationClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Observation"); //ok
-            OntClass sensingDevClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getQk() + ob.getIotType()); //replace ### with sensing device
+            OntClass sensingDevClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getIotType()); //ok
             OntClass sensorOutputClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "SensorOutput"); //ok
             OntClass observationValueClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "ObservationValue"); //ok
             OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getUnit()); //ok
@@ -141,7 +141,7 @@ public class FiestaAnnotator {
 
             //observed property
             String obsPropUri = INDV_NS_PREFIX + obsPropNamePrefix + ob.getQk();
-            Individual obsPropIndiv = ontModel.createIndividual(obsPropUri, observationValueClass);
+            Individual obsPropIndiv = ontModel.createIndividual(obsPropUri, qkClass);
             observationIndiv.setPropertyValue(observedProperty, obsPropIndiv);
 
             //time interval
@@ -223,7 +223,7 @@ public class FiestaAnnotator {
 //        obsArray.add(ob);
 //        Observations obs = new Observations(); 
 //        obs.setObservations(obsArray);
-        FiestaAnnotator ri = new FiestaAnnotator();
+        FiestaObsAnnotator ri = new FiestaObsAnnotator();
         String result = ri.annotateObservations(obs);
         System.out.println(result);
     }

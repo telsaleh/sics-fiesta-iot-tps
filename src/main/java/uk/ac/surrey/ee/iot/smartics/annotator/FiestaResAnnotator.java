@@ -17,14 +17,14 @@ import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import uk.ac.surrey.ee.iot.smartics.endpoint.servlet.DefaultServletListener;
-import uk.ac.surrey.ee.iot.smartics.model.ics.Resource;
-import uk.ac.surrey.ee.iot.smartics.model.ics.Resources;
+import uk.ac.surrey.ee.iot.smartics.model.proprietary.Resource;
+import uk.ac.surrey.ee.iot.smartics.model.proprietary.Resources;
 
 /**
  *
  * @author te0003
  */
-public class FiestaRegistrar {
+public class FiestaResAnnotator {
 
     //reference ontologies
     public String FIESTA_ONT_FILE_RUN = "file:///C://Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/ontologies/fiesta-iot/fiesta-iot.owl";
@@ -38,7 +38,7 @@ public class FiestaRegistrar {
     public String LOCATION = "ICS";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
 
-    public FiestaRegistrar() {
+    public FiestaResAnnotator() {
     }
 
     public String annotateResources(Resources resources) {
@@ -70,13 +70,16 @@ public class FiestaRegistrar {
             String TIME_PREFIX = ontModel.getNsPrefixURI("time");
             //classes
             OntClass deviceClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Device");
-            OntClass sensingDevClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "SensingDevice");
+//            OntClass sensingDevClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "SensingDevice");
+            OntClass sensingDevClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getIotType());
             OntClass systemClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "System");
             OntClass platformClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Platform");
             OntClass deploymentClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Deployment");
             OntClass locationClass = (OntClass) ontModel.getOntClass(GEO_PREFIX + "Point");
-            OntClass typeClass = (OntClass) ontModel.getOntClass(QU_PREFIX + "QuantityKind");
-            OntClass unitClass = (OntClass) ontModel.getOntClass(QU_PREFIX + "Unit");
+//            OntClass typeClass = (OntClass) ontModel.getOntClass(QU_PREFIX + "QuantityKind");
+            OntClass typeClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getQk());
+//            OntClass unitClass = (OntClass) ontModel.getOntClass(QU_PREFIX + "Unit");
+            OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getUnit());
             OntClass serviceClass = (OntClass) ontModel.getOntClass(IOT_LITE_PREFIX + "Service");
             OntClass coverageClass = (OntClass) ontModel.getOntClass(IOT_LITE_PREFIX + "Rectangle"); //Circle, Polygon
             //properties
@@ -106,14 +109,14 @@ public class FiestaRegistrar {
             //system individual (smart-campus)
             Individual scSystemIndiv = ontModel.createIndividual(INDV_NS_PREFIX + "SmartCampus", systemClass);
             sBuildingSystemIndiv.setPropertyValue(isSubSystemOf, scSystemIndiv);
-            //deployment individual (smart-ICS)
-            //device individual
+            //deployment individual (smart-ICS)            
             Individual deploymentIndiv = ontModel.createIndividual(INDV_NS_PREFIX + "Smart-ICS", deploymentClass);
             sBuildingSystemIndiv.setPropertyValue(hasDeployment, deploymentIndiv);
+            //device individual
             Individual deviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getDeviceId(), deviceClass);
             deviceIndiv.setPropertyValue(isSubSystemOf, sBuildingSystemIndiv);
             //urn:x-iot:smart-ics:iot-node:1.Temperature
-            //sensor individual
+            //sensing device individual
             Individual sensorDevIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getResourceId(), sensingDevClass);
             sensorDevIndiv.setPropertyValue(isSubSystemOf, deviceIndiv);
             deviceIndiv.addProperty(hasSubSystem, sensorDevIndiv);
@@ -195,7 +198,7 @@ public class FiestaRegistrar {
 //        obsArray.add(ob);
 //        Observations obs = new Observations(); 
 //        obs.setObservations(obsArray);
-        FiestaRegistrar ri = new FiestaRegistrar();
+        FiestaResAnnotator ri = new FiestaResAnnotator();
         String result = ri.annotateResources(res);
         System.out.println(result);
     }
