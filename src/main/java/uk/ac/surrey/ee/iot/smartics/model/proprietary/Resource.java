@@ -1,6 +1,5 @@
-package uk.ac.surrey.ee.iot.smartics.model.ics;
+package uk.ac.surrey.ee.iot.smartics.model.proprietary;
 
-import uk.ac.surrey.ee.iot.smartics.model.ics.*;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;

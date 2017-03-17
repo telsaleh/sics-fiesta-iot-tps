@@ -16,8 +16,8 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-import uk.ac.surrey.ee.iot.smartics.annotator.FiestaRegistrar;
-import uk.ac.surrey.ee.iot.smartics.model.ics.Resources;
+import uk.ac.surrey.ee.iot.smartics.annotator.FiestaResAnnotator;
+import uk.ac.surrey.ee.iot.smartics.model.proprietary.Resources;
 
 public class RegistryHandler extends ServerResource {
 
@@ -59,7 +59,7 @@ public class RegistryHandler extends ServerResource {
                 
             try {
                 Resources res = objectMapper.readValue(result.getStream(), Resources.class);
-                FiestaRegistrar fa = new FiestaRegistrar();
+                FiestaResAnnotator fa = new FiestaResAnnotator();
                 String annotatedRes = fa.annotateResources(res);               
                 return annotatedRes;
             } catch (IOException ex) {

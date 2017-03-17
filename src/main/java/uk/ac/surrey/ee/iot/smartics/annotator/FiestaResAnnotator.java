@@ -62,7 +62,7 @@ public class FiestaResAnnotator {
             ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
             ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
             String IOT_LITE_PREFIX = fiestOnt.getNsPrefixURI("iot-lite");
-            String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("m3-lite");
+            String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("mthreelite");
             String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
             String SSN_PREFIX = fiestOnt.getNsPrefixURI("ssn");
             String GEO_PREFIX = fiestOnt.getNsPrefixURI("geo");
@@ -80,6 +80,7 @@ public class FiestaResAnnotator {
             OntClass typeClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getQk());
 //            OntClass unitClass = (OntClass) ontModel.getOntClass(QU_PREFIX + "Unit");
             OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getUnit());
+            OntClass doiClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + "BuildingAutomation");
             OntClass serviceClass = (OntClass) ontModel.getOntClass(IOT_LITE_PREFIX + "Service");
             OntClass coverageClass = (OntClass) ontModel.getOntClass(IOT_LITE_PREFIX + "Rectangle"); //Circle, Polygon
             //properties
@@ -89,6 +90,7 @@ public class FiestaResAnnotator {
             Property geoLat = ontModel.getProperty(GEO_PREFIX + "lat");
             Property geoLong = ontModel.getProperty(GEO_PREFIX + "long");
             Property RelativeLocation = ontModel.getProperty(IOT_LITE_PREFIX + "relativeLocation");
+            Property hasDomainOfInterest = ontModel.getProperty(M3_LITE_PREFIX + "hasDomainOfInterest");
             Property onPlatform = ontModel.getProperty(SSN_PREFIX + "onPlatform");
             Property hasDeployment = ontModel.getProperty(SSN_PREFIX + "hasDeployment");
             Property hasQuantityKind = ontModel.getProperty(IOT_LITE_PREFIX + "hasQuantityKind");
@@ -115,6 +117,9 @@ public class FiestaResAnnotator {
             //device individual
             Individual deviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getDeviceId(), deviceClass);
             deviceIndiv.setPropertyValue(isSubSystemOf, sBuildingSystemIndiv);
+            //domain of interest individual
+            Individual doiIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getDeviceId()+"-BuildingAutomation", doiClass);
+            deviceIndiv.setPropertyValue(hasDomainOfInterest, doiIndiv);
             //urn:x-iot:smart-ics:iot-node:1.Temperature
             //sensing device individual
             Individual sensorDevIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getResourceId(), sensingDevClass);

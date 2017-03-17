@@ -16,8 +16,8 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-import uk.ac.surrey.ee.iot.smartics.annotator.FiestaAnnotator;
-import uk.ac.surrey.ee.iot.smartics.model.ics.Observations;
+import uk.ac.surrey.ee.iot.smartics.annotator.FiestaObsAnnotator;
+import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 public class TpsHandler extends ServerResource {
 
@@ -61,7 +61,7 @@ public class TpsHandler extends ServerResource {
             smartIcsClientResource.release();
             try {
                 Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
-                FiestaAnnotator fa = new FiestaAnnotator();
+                FiestaObsAnnotator fa = new FiestaObsAnnotator();
                 String annotatedOb = fa.annotateObservations(obs);               
 //                String annotatedOb = "OK";
                 return annotatedOb;

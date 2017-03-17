@@ -1,7 +1,6 @@
 
-package uk.ac.surrey.ee.iot.smartics.model.ics;
+package uk.ac.surrey.ee.iot.smartics.model.proprietary;
 
-import uk.ac.surrey.ee.iot.smartics.model.ics.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,25 +15,25 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "Observations"
 })
-public class Resources {
+public class Observations {
     
-    public Resources() {
+    public Observations() {
     }
 
-    @JsonProperty("Resources")
-    private List<Resource> observations = null;
+    @JsonProperty("Observations")
+    private List<Observation> observations = null;
 
     
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("Resources")
-    public List<Resource> getResources() {
+    @JsonProperty("Observations")
+    public List<Observation> getObservations() {
         return observations;
     }
 
-    @JsonProperty("Resources")
-    public void setResources(List<Resource> observations) {
+    @JsonProperty("Observations")
+    public void setObservations(List<Observation> observations) {
         this.observations = observations;
     }
 

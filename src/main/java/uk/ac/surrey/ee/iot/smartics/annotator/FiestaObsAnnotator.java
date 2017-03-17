@@ -74,7 +74,7 @@ public class FiestaObsAnnotator {
             ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
             ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
             String IOT_LITE_PREFIX = fiestOnt.getNsPrefixURI("iot-lite");
-            String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("m3-lite");
+            String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("mthreelite");
             String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
             String SSN_PREFIX = fiestOnt.getNsPrefixURI("ssn");
             String GEO_PREFIX = fiestOnt.getNsPrefixURI("geo");
