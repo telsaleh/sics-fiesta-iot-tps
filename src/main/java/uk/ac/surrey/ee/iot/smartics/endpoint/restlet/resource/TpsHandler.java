@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.JAXBException;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
@@ -17,6 +18,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaObsAnnotator;
+import uk.ac.surrey.ee.iot.smartics.model.fiesta.message.TpsRequest;
 import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 public class TpsHandler extends ServerResource {
@@ -36,7 +38,7 @@ public class TpsHandler extends ServerResource {
         String result = getSmartIcsObservation(tpsRequest);
         StringRepresentation response = new StringRepresentation(result);
         response.setMediaType(MediaType.APPLICATION_JSON);
-        
+
         return response;
     }
 
@@ -54,7 +56,7 @@ public class TpsHandler extends ServerResource {
         smartIcsClientResource.setNext(client);
         smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
         System.out.println("TPS request: " + tpsRequest);
-        String errorMessage="";
+        String errorMessage = "";
         try {
             Representation result = smartIcsClientResource
                     .post(new StringRepresentation(tpsRequest, MediaType.APPLICATION_JSON));
@@ -62,20 +64,39 @@ public class TpsHandler extends ServerResource {
             try {
                 Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
                 FiestaObsAnnotator fa = new FiestaObsAnnotator();
-                String annotatedOb = fa.annotateObservations(obs);               
+                String annotatedOb = fa.annotateObservations(obs);
 //                String annotatedOb = "OK";
                 return annotatedOb;
             } catch (IOException ioex) {
                 Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ioex);
-                System.out.println("IO Error....ERROR IS THIS: " + ioex.getLocalizedMessage()); 
+                System.out.println("IO Error....ERROR IS THIS: " + ioex.getLocalizedMessage());
             }
         } catch (ResourceException ex) {
             Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
-            System.out.println("ERROR IS THIS: " + ex.getLocalizedMessage()); 
+            System.out.println("ERROR IS THIS: " + ex.getLocalizedMessage());
             errorMessage = ex.getLocalizedMessage();
         }
         return errorMessage;
-        
+
+    }
+
+    public static void main(String[] args) throws JAXBException, IOException {
+
+        String test = "{"
+                + "\n"
+                + "  \"SensorIDs\": [\"sc-sics-sp-001-power\"]\n"
+                + "}";
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        TpsRequest obs = objectMapper.readValue(test, TpsRequest.class);
+        TpsHandler tpsH = new TpsHandler();
+        Representation rep = new StringRepresentation(test);
+        tpsH.handlePost(rep);
+
+        FiestaObsAnnotator ri = new FiestaObsAnnotator();
+        String result = ri.annotateObservations(obs);
+        System.out.println(result);
     }
 
 }

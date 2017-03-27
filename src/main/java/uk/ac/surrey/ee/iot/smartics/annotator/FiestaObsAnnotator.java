@@ -37,8 +37,8 @@ public class FiestaObsAnnotator {
     public String FIESTA_ONT_FILE_DEPLOY = "/ontologies/fiesta-iot/fiesta-iot.owl";
 
     //prefixes
-    public String INDV_NS_PREFIX = "http://iot.ee.surrey.ac.uk/smartcampus#";
-
+    public String INDV_NAMESPACE = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/";
+    
     //location
     public String LOCATION = "ICS";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
@@ -62,20 +62,18 @@ public class FiestaObsAnnotator {
             try{
 //            if (ob == null) {
 //                continue; // or break, whatever is better in your case
-//            }
-            
+//            }            
 
             OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
             ontModel.setStrictMode(true);
             ontModel.add(fiestOnt);
 
             //ontology prefixes
-            ontModel.setNsPrefix("sc", INDV_NS_PREFIX);
+            ontModel.setNsPrefix("sics", INDV_NAMESPACE);
             ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
             ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
             String IOT_LITE_PREFIX = fiestOnt.getNsPrefixURI("iot-lite");
             String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("mthreelite");
-            String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
             String SSN_PREFIX = fiestOnt.getNsPrefixURI("ssn");
             String GEO_PREFIX = fiestOnt.getNsPrefixURI("geo");
             String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
@@ -88,6 +86,7 @@ public class FiestaObsAnnotator {
             OntClass observationValueClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "ObservationValue"); //ok
             OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getUnit()); //ok
             OntClass qkClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getQk()); //not used, why?
+            
             OntClass geoPointClass = (OntClass) ontModel.getOntClass(GEO_PREFIX + "Point"); //ok
             OntClass timeIntervalClass = (OntClass) ontModel.getOntClass(TIME_PREFIX + "Instant");
 
@@ -110,53 +109,53 @@ public class FiestaObsAnnotator {
             Property hasDataValue = ontModel.getProperty(DUL_PREFIX + "hasDataValue"); //ok
 
             //individual prefixes (instances)
-            String deviceNamePrefix = "urn:x-iot:s-ics:";
-            String observationNamePrefix = "urn:x-iot:s-ics:obs:";
-            String obsValueNamePrefix = "urn:x-iot:s-ics:obsval:";
-            String sensorOutputNamePrefix = "urn:x-iot:s-ics:so:";
-            String obsPropNamePrefix = "urn:x-iot:s-ics:op:";
-            String timeIntNamePrefix = "urn:x-iot:s-ics:ti:";
-            String unitPrefix = "urn:x-iot:s-ics:unit:";
-            String locNamePrefix = "urn:x-iot:s-ics:loc:";
+            String sensingDevNamePrefix = "resource/";
+            String observationNamePrefix = "observationName#";
+            String obsValueNamePrefix = "observationValue#";
+            String sensorOutputNamePrefix = "sensorOutput#";
+            String obsPropNamePrefix = "observationProperty#:";
+            String timeIntNamePrefix = "timeInterval#";
+            String unitPrefix = "unit#";
+            String locNamePrefix = "loc#";
 
-            //device
-            String deviceUri = INDV_NS_PREFIX + deviceNamePrefix + ob.getResourceId();
-            Individual sensorDevIndiv = ontModel.createIndividual(deviceUri, sensingDevClass);
+            //sensing device
+            String sensingDevUri = INDV_NAMESPACE + sensingDevNamePrefix + ob.getResourceId();
+            Individual sensorDevIndiv = ontModel.createIndividual(sensingDevUri, sensingDevClass);
 
             //observation 
-            String observationUri = INDV_NS_PREFIX + observationNamePrefix + ob.getResourceId();
+            String observationUri = INDV_NAMESPACE + observationNamePrefix + ob.getResourceId();
             Individual observationIndiv = ontModel.createIndividual(observationUri, observationClass);
             observationIndiv.setPropertyValue(observedBy, sensorDevIndiv);
 
             //sensor output
-            String sensorOutputUri = INDV_NS_PREFIX + sensorOutputNamePrefix + ob.getResourceId();
+            String sensorOutputUri = INDV_NAMESPACE + sensorOutputNamePrefix + ob.getResourceId();
             Individual sensorOutputIndiv = ontModel.createIndividual(sensorOutputUri, sensorOutputClass);
             observationIndiv.setPropertyValue(observationResult, sensorOutputIndiv);
 
             //observation Value
-            String obsValueUri = INDV_NS_PREFIX + obsValueNamePrefix + ob.getResourceId();
+            String obsValueUri = INDV_NAMESPACE + obsValueNamePrefix + ob.getResourceId();
             Individual obsValueIndiv = ontModel.createIndividual(obsValueUri, observationValueClass);
             sensorOutputIndiv.setPropertyValue(hasValue, obsValueIndiv);
             obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createLiteral(ob.getDataValue()));
 
             //observed property
-            String obsPropUri = INDV_NS_PREFIX + obsPropNamePrefix + ob.getQk();
+            String obsPropUri = INDV_NAMESPACE + obsPropNamePrefix + ob.getQk();
             Individual obsPropIndiv = ontModel.createIndividual(obsPropUri, qkClass);
             observationIndiv.setPropertyValue(observedProperty, obsPropIndiv);
 
             //time interval
-            String timeIntUri = INDV_NS_PREFIX + timeIntNamePrefix + ob.getTimestamp();
+            String timeIntUri = INDV_NAMESPACE + timeIntNamePrefix + ob.getTimestamp();
             Individual timeIntervalIndiv = ontModel.createIndividual(timeIntUri, timeIntervalClass);
             observationIndiv.setPropertyValue(obserationSamplingTime, timeIntervalIndiv);
             timeIntervalIndiv.setPropertyValue(inXSDDateTime, ontModel.createLiteral(ob.getTimestamp()));
 
             //unit individual
-            String unitUri = INDV_NS_PREFIX + unitPrefix + ob.getUnit();
+            String unitUri = INDV_NAMESPACE + unitPrefix + ob.getUnit();
             Individual unitIndiv = ontModel.createIndividual(unitUri, unitClass);
             obsValueIndiv.setPropertyValue(hasUnit, unitIndiv);
 
             //location individual
-            String locationUri = INDV_NS_PREFIX + locNamePrefix + LOCATION;
+            String locationUri = INDV_NAMESPACE + locNamePrefix + LOCATION;
             Individual locationIndiv = ontModel.createIndividual(locationUri, geoPointClass);
             locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(ob.getLat()));
             locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(ob.getLon()));
