@@ -31,9 +31,20 @@ public class FiestaResAnnotator {
     public String FIESTA_ONT_FILE_DEPLOY = "/ontologies/fiesta-iot/fiesta-iot.owl";
 
     //prefixes
-    public String INDV_NS_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/";
-//    public String ENDPOINT_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/service/";
+    public static String INDV_NS_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/";
+    public static String sensingDevNamePrefix = "resource/";
 
+    public String systemNamePrefix = "system#";
+    public String deploymentNamePrefix = "deployment#";
+    public String deviceNamePrefix = "device#";
+    public String doiPrefix = "doi#";
+    public String platformNamePrefix = "platform#";
+    public String qkPrefix = "qk#";
+    public String unitPrefix = "unit#";
+    public String locNamePrefix = "loc#";
+    public String servNamePrefix = "service/";
+
+//    public String ENDPOINT_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/service/";
     //location
     public String LOCATION = "UNIVERSITY_OF_SURREY";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
@@ -97,17 +108,7 @@ public class FiestaResAnnotator {
             Property hasCoverage = ontModel.getProperty(IOT_LITE_PREFIX + "hasCoverage");
             Property hasPoint = ontModel.getProperty(IOT_LITE_PREFIX + "hasPoint"); //used for coverage only
             Property isMobile = ontModel.getProperty(IOT_LITE_PREFIX + "isMobile");
-            //individual prefixes (instances)
-            String systemNamePrefix = "system#";
-            String deploymentNamePrefix = "deployment#";
-            String deviceNamePrefix = "device#";
-            String doiPrefix = "doi#";
-            String sensingDevNamePrefix = "resource/";
-            String platformNamePrefix = "platform#";
-            String qkPrefix = "qk#";
-            String unitPrefix = "unit#";
-            String locNamePrefix = "loc#";
-            String servNamePrefix = "service/";
+
             //system individual (smart-building)
             Individual sBuildingSystemIndiv = ontModel.createIndividual(INDV_NS_PREFIX + systemNamePrefix + res.getSystem(), systemClass);
             //system individual (smart-campus)
@@ -129,7 +130,7 @@ public class FiestaResAnnotator {
             //platform individual
             Individual platformIndiv = ontModel.createIndividual(INDV_NS_PREFIX + platformNamePrefix + res.getPlatform(), platformClass);
             platformIndiv.setPropertyValue(isMobile, ontModel.createLiteral(res.getMobile()));
-            deviceIndiv.setPropertyValue(onPlatform, platformIndiv);            
+            deviceIndiv.setPropertyValue(onPlatform, platformIndiv);
             //qk individual
             Individual qkIndiv = ontModel.createIndividual(INDV_NS_PREFIX + qkPrefix + res.getQk(), typeClass);
             sensorDevIndiv.setPropertyValue(hasQuantityKind, qkIndiv);
