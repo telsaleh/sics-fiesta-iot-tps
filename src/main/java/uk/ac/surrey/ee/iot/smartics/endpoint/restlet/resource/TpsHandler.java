@@ -1,6 +1,7 @@
 package uk.ac.surrey.ee.iot.smartics.endpoint.restlet.resource;
 
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaObsAnnotator;
+import uk.ac.surrey.ee.iot.smartics.annotator.FiestaResAnnotator;
 import uk.ac.surrey.ee.iot.smartics.model.fiesta.message.TpsRequest;
 import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
@@ -47,6 +49,28 @@ public class TpsHandler extends ServerResource {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+        
+        TpsRequest tpsReq = new TpsRequest();
+        
+        try {
+            tpsReq = objectMapper.readValue(tpsRequest, TpsRequest.class);
+        } catch (IOException ex) {
+            Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        int tpsSize = tpsReq.getSensorIDs().size();
+         for (int i=0; i<tpsSize; i++) {
+             
+             String [] uriSplit = tpsReq.getSensorIDs().get(i).split(FiestaResAnnotator.INDV_NS_PREFIX+FiestaResAnnotator.sensingDevNamePrefix);
+             tpsReq.getSensorIDs().set(i, uriSplit[1]);
+         }
+         
+        try {
+            tpsRequest = objectMapper.writeValueAsString(tpsReq);
+        } catch (JsonProcessingException ex) {
+            Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         final Context context = new Context();
         Client client = new Client(new Context(), Protocol.HTTP);
@@ -84,19 +108,19 @@ public class TpsHandler extends ServerResource {
 
         String test = "{"
                 + "\n"
-                + "  \"SensorIDs\": [\"sc-sics-sp-001-power\"]\n"
+                + "  \"SensorIDs\": [\"http://smart-ics.ee.surrey.ac.uk/fiesta-iot/resource/sc-sics-sp-001-power\"]\n"
                 + "}";
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        TpsRequest obs = objectMapper.readValue(test, TpsRequest.class);
+//        TpsRequest tpsReq = objectMapper.readValue(test, TpsRequest.class);
         TpsHandler tpsH = new TpsHandler();
         Representation rep = new StringRepresentation(test);
         tpsH.handlePost(rep);
 
-        FiestaObsAnnotator ri = new FiestaObsAnnotator();
-        String result = ri.annotateObservations(obs);
-        System.out.println(result);
+//        FiestaObsAnnotator ri = new FiestaObsAnnotator();
+//        String result = ri.annotateObservations(obs);
+//        System.out.println(result);
     }
 
 }
