@@ -105,6 +105,7 @@ public class FiestaResAnnotator {
             Property hasUnit = ontModel.getProperty(IOT_LITE_PREFIX + "hasUnit");
             Property exposedBy = ontModel.getProperty(IOT_LITE_PREFIX + "exposedBy");
             Property endpoint = ontModel.getProperty(IOT_LITE_PREFIX + "endpoint");
+            Property interfaceType = ontModel.getProperty(IOT_LITE_PREFIX + "interfaceType");
             Property hasCoverage = ontModel.getProperty(IOT_LITE_PREFIX + "hasCoverage");
             Property hasPoint = ontModel.getProperty(IOT_LITE_PREFIX + "hasPoint"); //used for coverage only
             Property isMobile = ontModel.getProperty(IOT_LITE_PREFIX + "isMobile");
@@ -114,12 +115,15 @@ public class FiestaResAnnotator {
             //system individual (smart-campus)
             Individual scSystemIndiv = ontModel.createIndividual(INDV_NS_PREFIX + systemNamePrefix + "smart-campus", systemClass);
             sBuildingSystemIndiv.setPropertyValue(isSubSystemOf, scSystemIndiv);
+            scSystemIndiv.setPropertyValue(hasSubSystem, sBuildingSystemIndiv);
             //deployment individual (smart-ICS)            
             Individual deploymentIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deploymentNamePrefix + res.getDeployment(), deploymentClass);
-            sBuildingSystemIndiv.setPropertyValue(hasDeployment, deploymentIndiv);
+//            sBuildingSystemIndiv.setPropertyValue(hasDeployment, deploymentIndiv);
             //device individual
             Individual deviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getDeviceId(), deviceClass);
             deviceIndiv.setPropertyValue(isSubSystemOf, sBuildingSystemIndiv);
+            deviceIndiv.setPropertyValue(hasDeployment, deploymentIndiv);
+            sBuildingSystemIndiv.setPropertyValue(hasSubSystem, deviceIndiv);
             //domain of interest individual
             Individual doiIndiv = ontModel.createIndividual(INDV_NS_PREFIX + doiPrefix + "BuildingAutomation", doiClass);
             deviceIndiv.setPropertyValue(hasDomainOfInterest, doiIndiv);
@@ -155,6 +159,7 @@ public class FiestaResAnnotator {
             Individual serviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + servNamePrefix + res.getResourceId(), serviceClass);
             sensorDevIndiv.setPropertyValue(exposedBy, serviceIndiv);
             serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + res.getResourceId().toLowerCase()));
+            serviceIndiv.setPropertyValue(interfaceType, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + "RESTful"));
 
             //extract prefixes and instances
             Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);

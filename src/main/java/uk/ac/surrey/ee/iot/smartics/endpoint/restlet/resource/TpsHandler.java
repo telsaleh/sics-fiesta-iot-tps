@@ -25,7 +25,7 @@ import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 public class TpsHandler extends ServerResource {
 
-    public String sIcsURL = "http://131.227.88.96:5000/getLastObservations";
+    public String sicsURL = "http://131.227.88.96:5000/getLastObservations";
 
 //    @Get("txt")
 //    public String toString() {
@@ -76,7 +76,7 @@ public class TpsHandler extends ServerResource {
         Client client = new Client(new Context(), Protocol.HTTP);
         client.getContext().getParameters().add("maxConnectionsPerHost", "5");
         client.getContext().getParameters().add("maxTotalConnections", "5");
-        final ClientResource smartIcsClientResource = new ClientResource(context, sIcsURL);
+        final ClientResource smartIcsClientResource = new ClientResource(context, sicsURL);
         smartIcsClientResource.setNext(client);
         smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
         System.out.println("TPS request: " + tpsRequest);
@@ -116,7 +116,8 @@ public class TpsHandler extends ServerResource {
 //        TpsRequest tpsReq = objectMapper.readValue(test, TpsRequest.class);
         TpsHandler tpsH = new TpsHandler();
         Representation rep = new StringRepresentation(test);
-        tpsH.handlePost(rep);
+        Representation response = tpsH.handlePost(rep);
+        System.out.print(response.getText());
 
 //        FiestaObsAnnotator ri = new FiestaObsAnnotator();
 //        String result = ri.annotateObservations(obs);
