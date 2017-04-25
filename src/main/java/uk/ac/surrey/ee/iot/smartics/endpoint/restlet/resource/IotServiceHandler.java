@@ -21,7 +21,7 @@ import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 public class IotServiceHandler extends ServerResource {
 
-    public String sicsURL = "http://131.227.88.96:5000/getObservation/";
+    public String sicsURL = "http://131.227.88.96:5000/getLastObservation/";
 
 //    @Get("txt")
 //    public String toString() {
