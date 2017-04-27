@@ -15,6 +15,8 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import static org.apache.jena.datatypes.xsd.XSDDatatype.XSDdateTime;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -79,19 +81,12 @@ public class FiestaObsAnnotator {
             for (Observation ob : obs.getObservations()) {
 
                 try {
-//            if (ob == null) {
-//                continue; // or break, whatever is better in your case
-//            }            
-
                     OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
                     ontModel.setStrictMode(true);
-                    ontModel.add(fiestaOnt);
                     ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
 
                     //ontology prefixes
                     ontModel.setNsPrefix("sics", INDV_NAMESPACE);
-                    ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
-                    ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
                     String IOT_LITE_PREFIX = fiestaOnt.getNsPrefixURI("iot-lite");
                     String M3_LITE_PREFIX = fiestaOnt.getNsPrefixURI("mthreelite");
                     String SSN_PREFIX = fiestaOnt.getNsPrefixURI("ssn");
@@ -132,10 +127,11 @@ public class FiestaObsAnnotator {
                     String sensingDevUri = INDV_NAMESPACE + sensingDevNamePrefix + ob.getResourceId();
                     Individual sensorDevIndiv = ontModel.createIndividual(sensingDevUri, sensingDevClass);
 
-                    String instanceId = ob.getResourceId().concat("@" + ob.getTimestamp());
-
-                    Hashids hashids = new Hashids("instanceId", 10);
-                    String obsInstanceHash = hashids.encode(1L);
+                    String obsInstanceId = ob.getResourceId().concat("@" + ob.getTimestamp());
+                    Hashids obsHashId = new Hashids(obsInstanceId, 10);
+                    Hashids timeHashId = new Hashids(ob.getTimestamp(), 10);
+                    String obsInstanceHash = obsHashId.encode(1L);
+                    String obsTimeHash = timeHashId.encode(1L);
 
                     //observation 
                     String observationUri = INDV_NAMESPACE + observationNamePrefix + obsInstanceHash;
@@ -151,7 +147,7 @@ public class FiestaObsAnnotator {
                     String obsValueUri = INDV_NAMESPACE + obsValueNamePrefix + obsInstanceHash;
                     Individual obsValueIndiv = ontModel.createIndividual(obsValueUri, observationValueClass);
                     sensorOutputIndiv.setPropertyValue(hasValue, obsValueIndiv);
-                    obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createLiteral(ob.getDataValue()));
+                    obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDdouble));
 
                     //observed property
                     String obsPropUri = INDV_NAMESPACE + obsPropNamePrefix + ob.getQk();
@@ -159,10 +155,10 @@ public class FiestaObsAnnotator {
                     observationIndiv.setPropertyValue(observedProperty, obsPropIndiv);
 
                     //time interval                    
-                    String timeIntUri = INDV_NAMESPACE + timeIntNamePrefix + TIME_ZONE_PREFIX + ob.getTimestamp();
+                    String timeIntUri = INDV_NAMESPACE + timeIntNamePrefix + TIME_ZONE_PREFIX + obsTimeHash;
                     Individual timeIntervalIndiv = ontModel.createIndividual(timeIntUri, timeIntervalClass);
                     observationIndiv.setPropertyValue(obserationSamplingTime, timeIntervalIndiv);
-                    timeIntervalIndiv.setPropertyValue(inXSDDateTime, ontModel.createLiteral(ob.getTimestamp()));
+                    timeIntervalIndiv.setPropertyValue(inXSDDateTime, ontModel.createTypedLiteral(ob.getTimestamp(), XSDdateTime));
 
                     //unit individual
                     String unitUri = INDV_NAMESPACE + unitPrefix + ob.getUnit();
@@ -172,23 +168,24 @@ public class FiestaObsAnnotator {
                     //location individual
                     String locationUri = INDV_NAMESPACE + locNamePrefix + LOCATION_PREFIX + ob.getPlatform();
                     Individual locationIndiv = ontModel.createIndividual(locationUri, geoPointClass);
-                    locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(ob.getLat()));
-                    locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(ob.getLon()));
-                    locationIndiv.setPropertyValue(geoAlt, ontModel.createLiteral(ob.getAlt()));
+                    locationIndiv.setPropertyValue(geoLat, ontModel.createTypedLiteral(ob.getLat(), XSDDatatype.XSDdouble));
+                    locationIndiv.setPropertyValue(geoLong, ontModel.createTypedLiteral(ob.getLon(), XSDDatatype.XSDdouble));
+                    locationIndiv.setPropertyValue(geoAlt, ontModel.createTypedLiteral(ob.getAlt(), XSDDatatype.XSDdouble));
                     locationIndiv.setPropertyValue(geoAltRel, ontModel.createLiteral(ob.getRelativeAlt()));
                     locationIndiv.setPropertyValue(geoRelLoc, ontModel.createLiteral(RELATIVE_LOCATION));
                     observationIndiv.setPropertyValue(geoLocation, locationIndiv);
 
                     //extract all individuals
-                    Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-                    mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
-                    ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
-                    while (iterIndv.hasNext()) {
-                        Individual indv = (Individual) iterIndv.next();
-                        mIndividuals.add(indv.getOntModel());
-                    }
-                    mIndividuals.remove(fiestaOnt);
-                    tpsModel.add(mIndividuals);
+//                    Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+//                    mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
+//                    ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
+//                    while (iterIndv.hasNext()) {
+//                        Individual indv = (Individual) iterIndv.next();
+//                        mIndividuals.add(indv.getOntModel());
+//                    }
+//                    mIndividuals.remove(fiestaOnt);
+//                    tpsModel.add(mIndividuals);
+                    tpsModel.add(ontModel);
 
                 } catch (NullPointerException npe) {
                     System.out.println("null returned from smart-ics...");

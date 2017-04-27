@@ -24,7 +24,9 @@ public class RestReqApplication extends Application {
         Router router = new Router(getContext());
 
         router.attach(REGISTRY_PREFIX + GET_ALL_RES_PATH, RegistryHandler.class);        //GET
+        router.attach(TPS_PREFIX + GET_OBS_PATH, TpsHandler.class);                //POST   
         router.attach(TPS_PREFIX + GET_LAST_OBS_PATH, TpsHandler.class);                //POST   
+        
         router.attach(RESOURCE_PREFIX + "{resourceUri}", ResourceHandler.class);        //GET
         router.attach(SERVICE_PREFIX + "{resourceUri}", IotServiceHandler.class);        //GET
 

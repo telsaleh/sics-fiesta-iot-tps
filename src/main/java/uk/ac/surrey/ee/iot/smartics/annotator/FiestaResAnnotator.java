@@ -6,6 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 import javax.xml.bind.JAXBException;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
@@ -63,21 +64,20 @@ public class FiestaResAnnotator {
             ontFilePath = FIESTA_ONT_FILE_RUN;
         }
         Model tpsModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        Model fiestOnt = FileManager.get().loadModel(ontFilePath);
+        Model fiestaOnt = FileManager.get().loadModel(ontFilePath);
 
         for (Resource res : resources.getResources()) {
             OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
             ontModel.setStrictMode(true);
-            ontModel.add(fiestOnt);
+            ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
+
             //prefixes
             ontModel.setNsPrefix("sics", INDV_NS_PREFIX);
-            ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
-            ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
-            String IOT_LITE_PREFIX = fiestOnt.getNsPrefixURI("iot-lite");
-            String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("mthreelite");
+            String IOT_LITE_PREFIX = fiestaOnt.getNsPrefixURI("iot-lite");
+            String M3_LITE_PREFIX = fiestaOnt.getNsPrefixURI("mthreelite");
 //            String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
-            String SSN_PREFIX = fiestOnt.getNsPrefixURI("ssn");
-            String GEO_PREFIX = fiestOnt.getNsPrefixURI("geo");
+            String SSN_PREFIX = fiestaOnt.getNsPrefixURI("ssn");
+            String GEO_PREFIX = fiestaOnt.getNsPrefixURI("geo");
             String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
             String TIME_PREFIX = ontModel.getNsPrefixURI("time");
             //classes
@@ -142,7 +142,7 @@ public class FiestaResAnnotator {
             //platform individual
             String platformIndivUri = INDV_NS_PREFIX + platformNamePrefix + res.getPlatform();
             Individual platformIndiv = ontModel.createIndividual(platformIndivUri, platformClass);
-            platformIndiv.setPropertyValue(isMobile, ontModel.createLiteral(res.getMobile()));
+            platformIndiv.setPropertyValue(isMobile, ontModel.createTypedLiteral(Boolean.parseBoolean(res.getMobile()), XSDDatatype.XSDboolean));
             deviceIndiv.setPropertyValue(onPlatform, platformIndiv);
             //qk individual
             String qkIndivUri = INDV_NS_PREFIX + qkPrefix + res.getQk();
@@ -165,26 +165,27 @@ public class FiestaResAnnotator {
             Individual locationIndiv = ontModel.createIndividual(locationIndivUri, locationClass);
             platformIndiv.setPropertyValue(geoLocation, locationIndiv);
             locationIndiv.setPropertyValue(RelativeLocation, ontModel.createLiteral(RELATIVE_LOCATION));
-            locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(res.getLat()));
-            locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(res.getLon()));
+            locationIndiv.setPropertyValue(geoLat, ontModel.createTypedLiteral(res.getLat(), XSDDatatype.XSDdouble));
+            locationIndiv.setPropertyValue(geoLong, ontModel.createTypedLiteral(res.getLon(), XSDDatatype.XSDdouble));
             //service individual
             String serviceIndivUri = INDV_NS_PREFIX + servPathPrefix + res.getResourceId();
             Individual serviceIndiv = ontModel.createIndividual(serviceIndivUri, serviceClass);
             sensorDevIndiv.setPropertyValue(exposedBy, serviceIndiv);
-            serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(INDV_NS_PREFIX + servPathPrefix + res.getResourceId().toLowerCase()));
-            serviceIndiv.setPropertyValue(interfaceType, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + "RESTful"));
-//            serviceIndiv.setPropertyValue(isOnline, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + res.getIsOnline()));
+            serviceIndiv.setPropertyValue(endpoint, ontModel.createTypedLiteral(INDV_NS_PREFIX + servPathPrefix + res.getResourceId().toLowerCase(), XSDDatatype.XSDanyURI));
+            serviceIndiv.setPropertyValue(interfaceType, ontModel.createTypedLiteral("RESTful"));
+//            serviceIndiv.setPropertyValue(isOnline, ontModel.createLiteral(Boolean.parse(res.getIsOnline())));
 
             //extract prefixes and instances
-            Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-            mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
-            ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
-            while (iterIndv.hasNext()) {
-                Individual indv = (Individual) iterIndv.next();
-                mIndividuals.add(indv.getOntModel());
-            }
-            mIndividuals.remove(fiestOnt);//.write(System.out, "JSON-LD");
-            tpsModel.add(mIndividuals);
+//            Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+//            mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
+//            ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
+//            while (iterIndv.hasNext()) {
+//                Individual indv = (Individual) iterIndv.next();
+//                mIndividuals.add(indv.getOntModel());
+//            }
+//            mIndividuals.remove(fiestOnt);//.write(System.out, "JSON-LD");
+//            tpsModel.add(mIndividuals);
+            tpsModel.add(ontModel);
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();

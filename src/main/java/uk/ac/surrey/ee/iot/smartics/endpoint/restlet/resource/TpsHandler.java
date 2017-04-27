@@ -21,11 +21,14 @@ import org.restlet.resource.ServerResource;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaObsAnnotator;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaResAnnotator;
 import uk.ac.surrey.ee.iot.smartics.model.fiesta.message.TpsRequest;
+import uk.ac.surrey.ee.iot.smartics.model.fiesta.message.TpsRequest_old;
 import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 public class TpsHandler extends ServerResource {
 
-    public String sicsURL = "http://131.227.88.96:5000/getLastObservations";
+    public String sicsURL = "http://131.227.88.96:5000/";
+    public String getLastObservations = "getLastObservations";
+    public String getObservations = "getObservations";
 
 //    @Get("txt")
 //    public String toString() {
@@ -34,6 +37,13 @@ public class TpsHandler extends ServerResource {
     
     @Post("json")
     public Representation handlePost(Representation entity) throws IOException {
+        
+        String request = getRequest().getResourceRef().getPath();
+        System.out.println("HI:"+ request);
+        if (request.endsWith(getLastObservations))
+                sicsURL = sicsURL + getLastObservations;
+        else 
+                sicsURL = sicsURL + getObservations;
 
         String tpsRequest = entity.getText();
         ObjectMapper objectMapper = new ObjectMapper();
