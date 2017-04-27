@@ -31,6 +31,7 @@ public class TpsHandler extends ServerResource {
 //    public String toString() {
 //        return "Account of user \"" + "TEST" + "\"";
 //    }
+    
     @Post("json")
     public Representation handlePost(Representation entity) throws IOException {
 
@@ -88,9 +89,8 @@ public class TpsHandler extends ServerResource {
             try {
                 Observations obs = objectMapper.readValue(result.getStream(), Observations.class);
                 FiestaObsAnnotator fa = new FiestaObsAnnotator();
-                String annotatedOb = fa.annotateObservations(obs);
-//                String annotatedOb = "OK";
-                return annotatedOb;
+                String annotatedObs = fa.annotateObservations(obs);
+                return annotatedObs;
             } catch (IOException ioex) {
                 Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ioex);
                 System.out.println("IO Error....ERROR IS THIS: " + ioex.getLocalizedMessage());

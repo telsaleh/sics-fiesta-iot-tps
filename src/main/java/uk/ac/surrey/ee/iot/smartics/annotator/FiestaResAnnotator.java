@@ -42,11 +42,12 @@ public class FiestaResAnnotator {
     public String qkPrefix = "qk#";
     public String unitPrefix = "unit#";
     public String locNamePrefix = "loc#";
-    public String servNamePrefix = "service/";
+    public String servNamePrefix = "service#";
+    public String servPathPrefix = "service/";
 
 //    public String ENDPOINT_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/service/";
     //location
-    public String LOCATION = "UNIVERSITY_OF_SURREY";
+    public String LOCATION = "UNIVERSITY_OF_SURREY-";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
 
     public FiestaResAnnotator() {
@@ -74,7 +75,7 @@ public class FiestaResAnnotator {
             ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
             String IOT_LITE_PREFIX = fiestOnt.getNsPrefixURI("iot-lite");
             String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("mthreelite");
-            String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
+//            String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
             String SSN_PREFIX = fiestOnt.getNsPrefixURI("ssn");
             String GEO_PREFIX = fiestOnt.getNsPrefixURI("geo");
             String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
@@ -109,37 +110,47 @@ public class FiestaResAnnotator {
             Property hasCoverage = ontModel.getProperty(IOT_LITE_PREFIX + "hasCoverage");
             Property hasPoint = ontModel.getProperty(IOT_LITE_PREFIX + "hasPoint"); //used for coverage only
             Property isMobile = ontModel.getProperty(IOT_LITE_PREFIX + "isMobile");
+            Property isOnline = ontModel.getProperty(IOT_LITE_PREFIX + "isOnline");
 
             //system individual (smart-building)
-            Individual sBuildingSystemIndiv = ontModel.createIndividual(INDV_NS_PREFIX + systemNamePrefix + res.getSystem(), systemClass);
+            String sBuildingSystemIndivUri = INDV_NS_PREFIX + systemNamePrefix + res.getSystem();
+            Individual sBuildingSystemIndiv = ontModel.createIndividual(sBuildingSystemIndivUri, systemClass);
             //system individual (smart-campus)
-            Individual scSystemIndiv = ontModel.createIndividual(INDV_NS_PREFIX + systemNamePrefix + "smart-campus", systemClass);
+            String scSystemIndivUri = INDV_NS_PREFIX + systemNamePrefix + "smart-campus";
+            Individual scSystemIndiv = ontModel.createIndividual(scSystemIndivUri, systemClass);
             sBuildingSystemIndiv.setPropertyValue(isSubSystemOf, scSystemIndiv);
             scSystemIndiv.setPropertyValue(hasSubSystem, sBuildingSystemIndiv);
-            //deployment individual (smart-ICS)            
-            Individual deploymentIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deploymentNamePrefix + res.getDeployment(), deploymentClass);
+            //deployment individual (smart-ICS)
+            String deploymentIndivUri = INDV_NS_PREFIX + deploymentNamePrefix + res.getDeployment();
+            Individual deploymentIndiv = ontModel.createIndividual(deploymentIndivUri, deploymentClass);
 //            sBuildingSystemIndiv.setPropertyValue(hasDeployment, deploymentIndiv);
             //device individual
-            Individual deviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + deviceNamePrefix + res.getDeviceId(), deviceClass);
+            String deviceIndivUri = INDV_NS_PREFIX + deviceNamePrefix + res.getDeviceId();
+            Individual deviceIndiv = ontModel.createIndividual(deviceIndivUri, deviceClass);
             deviceIndiv.setPropertyValue(isSubSystemOf, sBuildingSystemIndiv);
             deviceIndiv.setPropertyValue(hasDeployment, deploymentIndiv);
             sBuildingSystemIndiv.setPropertyValue(hasSubSystem, deviceIndiv);
             //domain of interest individual
-            Individual doiIndiv = ontModel.createIndividual(INDV_NS_PREFIX + doiPrefix + "BuildingAutomation", doiClass);
+            String doiIndivUri = INDV_NS_PREFIX + doiPrefix + "BuildingAutomation";
+            Individual doiIndiv = ontModel.createIndividual(doiIndivUri, doiClass);
             deviceIndiv.setPropertyValue(hasDomainOfInterest, doiIndiv);
             //sensing device individual
-            Individual sensorDevIndiv = ontModel.createIndividual(INDV_NS_PREFIX + sensingDevNamePrefix + res.getResourceId(), sensingDevClass);
+            String sensorDevIndivUri = INDV_NS_PREFIX + sensingDevNamePrefix + res.getResourceId();
+            Individual sensorDevIndiv = ontModel.createIndividual(sensorDevIndivUri, sensingDevClass);
             sensorDevIndiv.setPropertyValue(isSubSystemOf, deviceIndiv);
             deviceIndiv.addProperty(hasSubSystem, sensorDevIndiv);
             //platform individual
-            Individual platformIndiv = ontModel.createIndividual(INDV_NS_PREFIX + platformNamePrefix + res.getPlatform(), platformClass);
+            String platformIndivUri = INDV_NS_PREFIX + platformNamePrefix + res.getPlatform();
+            Individual platformIndiv = ontModel.createIndividual(platformIndivUri, platformClass);
             platformIndiv.setPropertyValue(isMobile, ontModel.createLiteral(res.getMobile()));
             deviceIndiv.setPropertyValue(onPlatform, platformIndiv);
             //qk individual
-            Individual qkIndiv = ontModel.createIndividual(INDV_NS_PREFIX + qkPrefix + res.getQk(), typeClass);
+            String qkIndivUri = INDV_NS_PREFIX + qkPrefix + res.getQk();
+            Individual qkIndiv = ontModel.createIndividual(qkIndivUri, typeClass);
             sensorDevIndiv.setPropertyValue(hasQuantityKind, qkIndiv);
             //unit individual
-            Individual unitIndiv = ontModel.createIndividual(INDV_NS_PREFIX + unitPrefix + res.getUnit(), unitClass);
+            String unitIndivUri = INDV_NS_PREFIX + unitPrefix + res.getUnit();
+            Individual unitIndiv = ontModel.createIndividual(unitIndivUri, unitClass);
             sensorDevIndiv.setPropertyValue(hasUnit, unitIndiv);
 
             //smart-ics area
@@ -150,16 +161,19 @@ public class FiestaResAnnotator {
             // double lat = ThreadLocalRandom.current().nextDouble(51.243223, 51.243512);
             // double lon = ThreadLocalRandom.current().nextDouble(-0.593416, -0.592964);
             //location individual
-            Individual locationIndiv = ontModel.createIndividual(INDV_NS_PREFIX + locNamePrefix + LOCATION, locationClass);
+            String locationIndivUri = INDV_NS_PREFIX + locNamePrefix + LOCATION + res.getPlatform();
+            Individual locationIndiv = ontModel.createIndividual(locationIndivUri, locationClass);
             platformIndiv.setPropertyValue(geoLocation, locationIndiv);
             locationIndiv.setPropertyValue(RelativeLocation, ontModel.createLiteral(RELATIVE_LOCATION));
             locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(res.getLat()));
             locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(res.getLon()));
             //service individual
-            Individual serviceIndiv = ontModel.createIndividual(INDV_NS_PREFIX + servNamePrefix + res.getResourceId(), serviceClass);
+            String serviceIndivUri = INDV_NS_PREFIX + servPathPrefix + res.getResourceId();
+            Individual serviceIndiv = ontModel.createIndividual(serviceIndivUri, serviceClass);
             sensorDevIndiv.setPropertyValue(exposedBy, serviceIndiv);
-            serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + res.getResourceId().toLowerCase()));
+            serviceIndiv.setPropertyValue(endpoint, ontModel.createLiteral(INDV_NS_PREFIX + servPathPrefix + res.getResourceId().toLowerCase()));
             serviceIndiv.setPropertyValue(interfaceType, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + "RESTful"));
+//            serviceIndiv.setPropertyValue(isOnline, ontModel.createLiteral(INDV_NS_PREFIX + servNamePrefix + res.getIsOnline()));
 
             //extract prefixes and instances
             Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);

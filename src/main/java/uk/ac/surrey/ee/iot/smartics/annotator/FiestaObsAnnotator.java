@@ -8,6 +8,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
@@ -19,6 +25,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.hashids.Hashids;
 import uk.ac.surrey.ee.iot.smartics.endpoint.servlet.DefaultServletListener;
 import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observation;
 import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
@@ -40,7 +47,7 @@ public class FiestaObsAnnotator {
     public String INDV_NAMESPACE = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/";
     //individual prefixes (instances)
     public String sensingDevNamePrefix = "resource/";
-    public String observationNamePrefix = "observationName#";
+    public String observationNamePrefix = "observation#";
     public String obsValueNamePrefix = "observationValue#";
     public String sensorOutputNamePrefix = "sensorOutput#";
     public String obsPropNamePrefix = "observationProperty#";
@@ -49,8 +56,11 @@ public class FiestaObsAnnotator {
     public String locNamePrefix = "loc#";
 
     //location
-    public String LOCATION = "ICS";
+    public String LOCATION_PREFIX = "UNIVERSITY_OF_SURREY-";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
+
+    //time
+    public String TIME_ZONE_PREFIX = "UTC_"; //Calendar.getInstance().getTimeZone().
 
     public String annotateObservations(Observations obs) {
 
@@ -62,7 +72,7 @@ public class FiestaObsAnnotator {
             ontFilePath = FIESTA_ONT_FILE_RUN;
         }
         Model tpsModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        Model fiestOnt = FileManager.get().loadModel(ontFilePath);
+        Model fiestaOnt = FileManager.get().loadModel(ontFilePath);
 
         try {
             //iterate over observations
@@ -75,16 +85,17 @@ public class FiestaObsAnnotator {
 
                     OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
                     ontModel.setStrictMode(true);
-                    ontModel.add(fiestOnt);
+                    ontModel.add(fiestaOnt);
+                    ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
 
                     //ontology prefixes
                     ontModel.setNsPrefix("sics", INDV_NAMESPACE);
                     ontModel.setNsPrefix("dul", "http://www.ontologydesignpatterns.org/ont/dul/DUL.owl#");
                     ontModel.setNsPrefix("time", "http://www.w3.org/2006/time#");
-                    String IOT_LITE_PREFIX = fiestOnt.getNsPrefixURI("iot-lite");
-                    String M3_LITE_PREFIX = fiestOnt.getNsPrefixURI("mthreelite");
-                    String SSN_PREFIX = fiestOnt.getNsPrefixURI("ssn");
-                    String GEO_PREFIX = fiestOnt.getNsPrefixURI("geo");
+                    String IOT_LITE_PREFIX = fiestaOnt.getNsPrefixURI("iot-lite");
+                    String M3_LITE_PREFIX = fiestaOnt.getNsPrefixURI("mthreelite");
+                    String SSN_PREFIX = fiestaOnt.getNsPrefixURI("ssn");
+                    String GEO_PREFIX = fiestaOnt.getNsPrefixURI("geo");
                     String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
                     String TIME_PREFIX = ontModel.getNsPrefixURI("time");
 
@@ -94,7 +105,7 @@ public class FiestaObsAnnotator {
                     OntClass sensorOutputClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "SensorOutput"); //ok
                     OntClass observationValueClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "ObservationValue"); //ok
                     OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getUnit()); //ok
-                    OntClass qkClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getQk()); //not used, why?
+                    OntClass qkClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getQk()); //ok
 
                     OntClass geoPointClass = (OntClass) ontModel.getOntClass(GEO_PREFIX + "Point"); //ok
                     OntClass timeIntervalClass = (OntClass) ontModel.getOntClass(TIME_PREFIX + "Instant");
@@ -121,18 +132,23 @@ public class FiestaObsAnnotator {
                     String sensingDevUri = INDV_NAMESPACE + sensingDevNamePrefix + ob.getResourceId();
                     Individual sensorDevIndiv = ontModel.createIndividual(sensingDevUri, sensingDevClass);
 
+                    String instanceId = ob.getResourceId().concat("@" + ob.getTimestamp());
+
+                    Hashids hashids = new Hashids("instanceId", 10);
+                    String obsInstanceHash = hashids.encode(1L);
+
                     //observation 
-                    String observationUri = INDV_NAMESPACE + observationNamePrefix + ob.getResourceId();
+                    String observationUri = INDV_NAMESPACE + observationNamePrefix + obsInstanceHash;
                     Individual observationIndiv = ontModel.createIndividual(observationUri, observationClass);
                     observationIndiv.setPropertyValue(observedBy, sensorDevIndiv);
 
                     //sensor output
-                    String sensorOutputUri = INDV_NAMESPACE + sensorOutputNamePrefix + ob.getResourceId();
+                    String sensorOutputUri = INDV_NAMESPACE + sensorOutputNamePrefix + obsInstanceHash; //is SensorOutput unique for each observations?
                     Individual sensorOutputIndiv = ontModel.createIndividual(sensorOutputUri, sensorOutputClass);
                     observationIndiv.setPropertyValue(observationResult, sensorOutputIndiv);
 
                     //observation Value
-                    String obsValueUri = INDV_NAMESPACE + obsValueNamePrefix + ob.getResourceId();
+                    String obsValueUri = INDV_NAMESPACE + obsValueNamePrefix + obsInstanceHash;
                     Individual obsValueIndiv = ontModel.createIndividual(obsValueUri, observationValueClass);
                     sensorOutputIndiv.setPropertyValue(hasValue, obsValueIndiv);
                     obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createLiteral(ob.getDataValue()));
@@ -142,8 +158,8 @@ public class FiestaObsAnnotator {
                     Individual obsPropIndiv = ontModel.createIndividual(obsPropUri, qkClass);
                     observationIndiv.setPropertyValue(observedProperty, obsPropIndiv);
 
-                    //time interval
-                    String timeIntUri = INDV_NAMESPACE + timeIntNamePrefix + ob.getTimestamp();
+                    //time interval                    
+                    String timeIntUri = INDV_NAMESPACE + timeIntNamePrefix + TIME_ZONE_PREFIX + ob.getTimestamp();
                     Individual timeIntervalIndiv = ontModel.createIndividual(timeIntUri, timeIntervalClass);
                     observationIndiv.setPropertyValue(obserationSamplingTime, timeIntervalIndiv);
                     timeIntervalIndiv.setPropertyValue(inXSDDateTime, ontModel.createLiteral(ob.getTimestamp()));
@@ -154,7 +170,7 @@ public class FiestaObsAnnotator {
                     obsValueIndiv.setPropertyValue(hasUnit, unitIndiv);
 
                     //location individual
-                    String locationUri = INDV_NAMESPACE + locNamePrefix + LOCATION;
+                    String locationUri = INDV_NAMESPACE + locNamePrefix + LOCATION_PREFIX + ob.getPlatform();
                     Individual locationIndiv = ontModel.createIndividual(locationUri, geoPointClass);
                     locationIndiv.setPropertyValue(geoLat, ontModel.createLiteral(ob.getLat()));
                     locationIndiv.setPropertyValue(geoLong, ontModel.createLiteral(ob.getLon()));
@@ -171,7 +187,7 @@ public class FiestaObsAnnotator {
                         Individual indv = (Individual) iterIndv.next();
                         mIndividuals.add(indv.getOntModel());
                     }
-                    mIndividuals.remove(fiestOnt);
+                    mIndividuals.remove(fiestaOnt);
                     tpsModel.add(mIndividuals);
 
                 } catch (NullPointerException npe) {
