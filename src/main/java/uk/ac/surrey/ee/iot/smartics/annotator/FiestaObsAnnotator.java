@@ -8,12 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import static org.apache.jena.datatypes.xsd.XSDDatatype.XSDdateTime;
@@ -176,16 +170,16 @@ public class FiestaObsAnnotator {
                     observationIndiv.setPropertyValue(geoLocation, locationIndiv);
 
                     //extract all individuals
-//                    Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-//                    mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
-//                    ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
-//                    while (iterIndv.hasNext()) {
-//                        Individual indv = (Individual) iterIndv.next();
-//                        mIndividuals.add(indv.getOntModel());
-//                    }
-//                    mIndividuals.remove(fiestaOnt);
-//                    tpsModel.add(mIndividuals);
-                    tpsModel.add(ontModel);
+                    Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+                    mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
+                    ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
+                    while (iterIndv.hasNext()) {
+                        Individual indv = (Individual) iterIndv.next();
+                        mIndividuals.add(indv.getOntModel());
+                    }
+                    mIndividuals.remove(fiestaOnt);
+                    tpsModel.add(mIndividuals);
+//                    tpsModel.add(ontModel);
 
                 } catch (NullPointerException npe) {
                     System.out.println("null returned from smart-ics...");

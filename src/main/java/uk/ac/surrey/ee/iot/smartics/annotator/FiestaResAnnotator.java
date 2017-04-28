@@ -69,7 +69,8 @@ public class FiestaResAnnotator {
         for (Resource res : resources.getResources()) {
             OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
             ontModel.setStrictMode(true);
-            ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
+            ontModel.add(fiestaOnt);
+//            ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
 
             //prefixes
             ontModel.setNsPrefix("sics", INDV_NS_PREFIX);
@@ -176,16 +177,16 @@ public class FiestaResAnnotator {
 //            serviceIndiv.setPropertyValue(isOnline, ontModel.createLiteral(Boolean.parse(res.getIsOnline())));
 
             //extract prefixes and instances
-//            Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-//            mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
-//            ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
-//            while (iterIndv.hasNext()) {
-//                Individual indv = (Individual) iterIndv.next();
-//                mIndividuals.add(indv.getOntModel());
-//            }
-//            mIndividuals.remove(fiestOnt);//.write(System.out, "JSON-LD");
-//            tpsModel.add(mIndividuals);
-            tpsModel.add(ontModel);
+            Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+            mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
+            ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
+            while (iterIndv.hasNext()) {
+                Individual indv = (Individual) iterIndv.next();
+                mIndividuals.add(indv.getOntModel());
+            }
+            mIndividuals.remove(fiestaOnt);//.write(System.out, "JSON-LD");
+            tpsModel.add(mIndividuals);
+//            tpsModel.add(ontModel);
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
