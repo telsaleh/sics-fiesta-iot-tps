@@ -77,7 +77,7 @@ public class FiestaObsAnnotator {
                 try {
                     OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
                     ontModel.setStrictMode(true);
-                    ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
+                    ontModel.add(fiestaOnt);                    
 
                     //ontology prefixes
                     ontModel.setNsPrefix("sics", INDV_NAMESPACE);
