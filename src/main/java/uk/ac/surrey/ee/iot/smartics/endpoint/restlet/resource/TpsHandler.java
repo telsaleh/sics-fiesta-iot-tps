@@ -34,7 +34,7 @@ public class TpsHandler extends ServerResource {
 //        return "Account of user \"" + "TEST" + "\"";
 //    }
     
-    @Post("json")
+    @Post
     public Representation handlePost(Representation entity) throws IOException {
         
         String request = getRequest().getResourceRef().getPath();
@@ -51,6 +51,7 @@ public class TpsHandler extends ServerResource {
         
         StringRepresentation response = new StringRepresentation(result);
         response.setMediaType(MediaType.valueOf("application/ld+json"));
+        response.setCharacterSet(null);
 
 
         return response;

@@ -33,6 +33,7 @@ public class IotServiceHandler extends ServerResource {
         String result = getObservation();
         StringRepresentation response = new StringRepresentation(result);
         response.setMediaType(MediaType.valueOf("application/ld+json"));
+        response.setCharacterSet(null);
 
         return response;
     }
