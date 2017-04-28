@@ -21,7 +21,6 @@ import org.restlet.resource.ServerResource;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaObsAnnotator;
 import uk.ac.surrey.ee.iot.smartics.annotator.FiestaResAnnotator;
 import uk.ac.surrey.ee.iot.smartics.model.fiesta.message.TpsRequest;
-import uk.ac.surrey.ee.iot.smartics.model.fiesta.message.TpsRequest_old;
 import uk.ac.surrey.ee.iot.smartics.model.proprietary.Observations;
 
 public class TpsHandler extends ServerResource {
@@ -49,8 +48,10 @@ public class TpsHandler extends ServerResource {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         String result = getSmartIcsObservation(tpsRequest);
+        
         StringRepresentation response = new StringRepresentation(result);
-        response.setMediaType(MediaType.APPLICATION_JSON);
+        response.setMediaType(MediaType.valueOf("application/ld+json"));
+
 
         return response;
     }

@@ -70,48 +70,88 @@ public class FiestaResAnnotator {
             OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
             ontModel.setStrictMode(true);
             ontModel.add(fiestaOnt);
-//            ontModel.setNsPrefixes(fiestaOnt.getNsPrefixMap());
 
             //prefixes
             ontModel.setNsPrefix("sics", INDV_NS_PREFIX);
             String IOT_LITE_PREFIX = fiestaOnt.getNsPrefixURI("iot-lite");
             String M3_LITE_PREFIX = fiestaOnt.getNsPrefixURI("mthreelite");
-//            String QU_PREFIX = fiestOnt.getNsPrefixURI("qu");
             String SSN_PREFIX = fiestaOnt.getNsPrefixURI("ssn");
             String GEO_PREFIX = fiestaOnt.getNsPrefixURI("geo");
             String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
             String TIME_PREFIX = ontModel.getNsPrefixURI("time");
-            //classes
-            OntClass deviceClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Device");
-            OntClass sensingDevClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getIotType());
-            OntClass systemClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "System");
-            OntClass platformClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Platform");
-            OntClass deploymentClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Deployment");
-            OntClass locationClass = (OntClass) ontModel.getOntClass(GEO_PREFIX + "Point");
-            OntClass typeClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getQk());
-            OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + res.getUnit());
-            OntClass doiClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + "BuildingAutomation");
-            OntClass serviceClass = (OntClass) ontModel.getOntClass(IOT_LITE_PREFIX + "Service");
-            OntClass coverageClass = (OntClass) ontModel.getOntClass(IOT_LITE_PREFIX + "Rectangle"); //Circle, Polygon
+
+            OntClass deviceClass = null;
+            OntClass sensingDevClass = null;
+            OntClass systemClass = null;
+            OntClass platformClass = null;
+            OntClass deploymentClass = null;
+            OntClass locationClass = null;
+            OntClass typeClass = null;
+            OntClass unitClass = null;
+            OntClass doiClass = null;
+            OntClass serviceClass = null;
+            OntClass coverageClass = null;
             //properties
-            Property isSubSystemOf = ontModel.getProperty(IOT_LITE_PREFIX + "isSubSystemOf");
-            Property hasSubSystem = ontModel.getProperty(SSN_PREFIX + "hasSubSystem");
-            Property geoLocation = ontModel.getProperty(GEO_PREFIX + "location");
-            Property geoLat = ontModel.getProperty(GEO_PREFIX + "lat");
-            Property geoLong = ontModel.getProperty(GEO_PREFIX + "long");
-            Property RelativeLocation = ontModel.getProperty(IOT_LITE_PREFIX + "relativeLocation");
-            Property hasDomainOfInterest = ontModel.getProperty(M3_LITE_PREFIX + "hasDomainOfInterest");
-            Property onPlatform = ontModel.getProperty(SSN_PREFIX + "onPlatform");
-            Property hasDeployment = ontModel.getProperty(SSN_PREFIX + "hasDeployment");
-            Property hasQuantityKind = ontModel.getProperty(IOT_LITE_PREFIX + "hasQuantityKind");
-            Property hasUnit = ontModel.getProperty(IOT_LITE_PREFIX + "hasUnit");
-            Property exposedBy = ontModel.getProperty(IOT_LITE_PREFIX + "exposedBy");
-            Property endpoint = ontModel.getProperty(IOT_LITE_PREFIX + "endpoint");
-            Property interfaceType = ontModel.getProperty(IOT_LITE_PREFIX + "interfaceType");
-            Property hasCoverage = ontModel.getProperty(IOT_LITE_PREFIX + "hasCoverage");
-            Property hasPoint = ontModel.getProperty(IOT_LITE_PREFIX + "hasPoint"); //used for coverage only
-            Property isMobile = ontModel.getProperty(IOT_LITE_PREFIX + "isMobile");
-            Property isOnline = ontModel.getProperty(IOT_LITE_PREFIX + "isOnline");
+            Property isSubSystemOf = null;
+            Property hasSubSystem = null;
+            Property geoLocation = null;
+            Property geoLat = null;
+            Property geoLong = null;
+            Property RelativeLocation = null;
+            Property hasDomainOfInterest = null;
+            Property onPlatform = null;
+            Property hasDeployment = null;
+            Property hasQuantityKind = null;
+            Property hasUnit = null;
+            Property exposedBy = null;
+            Property endpoint = null;
+            Property interfaceType = null;
+            Property hasCoverage = null;
+            Property hasPoint = null;
+            Property isMobile = null;
+            Property isOnline = null;
+
+            try {
+
+                //classes
+                deviceClass = ontModel.getOntClass(SSN_PREFIX + "Device").asClass();
+                sensingDevClass = ontModel.getOntClass(M3_LITE_PREFIX + res.getIotType()).asClass();
+                systemClass = ontModel.getOntClass(SSN_PREFIX + "System").asClass();
+                platformClass = ontModel.getOntClass(SSN_PREFIX + "Platform").asClass();
+                deploymentClass = ontModel.getOntClass(SSN_PREFIX + "Deployment").asClass();
+                locationClass = ontModel.getOntClass(GEO_PREFIX + "Point").asClass();
+                typeClass = ontModel.getOntClass(M3_LITE_PREFIX + res.getQk()).asClass();
+                unitClass = ontModel.getOntClass(M3_LITE_PREFIX + res.getUnit()).asClass();
+                doiClass = ontModel.getOntClass(M3_LITE_PREFIX + "BuildingAutomation").asClass();
+                serviceClass = ontModel.getOntClass(IOT_LITE_PREFIX + "Service").asClass();
+                coverageClass = ontModel.getOntClass(IOT_LITE_PREFIX + "Rectangle").asClass(); //Circle, Polygon
+                //object properties
+                isSubSystemOf = ontModel.getObjectProperty(IOT_LITE_PREFIX + "isSubSystemOf").asObjectProperty();
+                hasSubSystem = ontModel.getObjectProperty(SSN_PREFIX + "hasSubSystem").asObjectProperty();
+                hasDomainOfInterest = ontModel.getObjectProperty(M3_LITE_PREFIX + "hasDomainOfInterest").asObjectProperty();
+                onPlatform = ontModel.getObjectProperty(SSN_PREFIX + "onPlatform").asObjectProperty();
+                hasDeployment = ontModel.getObjectProperty(SSN_PREFIX + "hasDeployment").asObjectProperty();
+                hasQuantityKind = ontModel.getObjectProperty(IOT_LITE_PREFIX + "hasQuantityKind").asObjectProperty();
+                hasUnit = ontModel.getObjectProperty(IOT_LITE_PREFIX + "hasUnit").asObjectProperty();
+                exposedBy = ontModel.getObjectProperty(IOT_LITE_PREFIX + "exposedBy").asObjectProperty();
+                hasCoverage = ontModel.getObjectProperty(IOT_LITE_PREFIX + "hasCoverage").asObjectProperty();
+                geoLocation = ontModel.getObjectProperty(GEO_PREFIX + "location").asObjectProperty();
+//            hasPoint = ontModel.getObjectProperty(IOT_LITE_PREFIX + "hasPoint").asObjectProperty(); //used for coverage only
+
+                //datatype properties                
+                endpoint = ontModel.getDatatypeProperty(IOT_LITE_PREFIX + "endpoint").asDatatypeProperty();
+                interfaceType = ontModel.getDatatypeProperty(IOT_LITE_PREFIX + "interfaceType").asDatatypeProperty();
+                isMobile = ontModel.getDatatypeProperty(IOT_LITE_PREFIX + "isMobile").asDatatypeProperty();
+                //isOnline = ontModel.getDatatypeProperty(IOT_LITE_PREFIX + "isOnline").asDatatypeProperty();
+
+                //annotation properties                
+                geoLat = ontModel.getAnnotationProperty(GEO_PREFIX + "lat").asAnnotationProperty();
+                geoLong = ontModel.getAnnotationProperty(GEO_PREFIX + "long").asAnnotationProperty();
+                RelativeLocation = ontModel.getAnnotationProperty(IOT_LITE_PREFIX + "relativeLocation").asAnnotationProperty();
+
+            } catch (NullPointerException npe) {
+                npe.printStackTrace();
+            }
 
             //system individual (smart-building)
             String sBuildingSystemIndivUri = INDV_NS_PREFIX + systemNamePrefix + res.getSystem();
@@ -200,7 +240,7 @@ public class FiestaResAnnotator {
 
         String test = "{\n"
                 + "	\"Resources\": [{\n"
-                + "		\"iot-type\": \"unis-smart-campus\",\n"
+                + "		\"iot-type\": \"EnergyMeter\",\n"
                 + "		\"mobile\": \"False\",\n"
                 + "		\"resourceId\": \"sc-sics-sp-001-power\",\n"
                 + "		\"measurement\": \"Watts\",\n"
@@ -211,9 +251,9 @@ public class FiestaResAnnotator {
                 + "		\"deviceId\": \"sc-sics-sp-001\",\n"
                 + "		\"deployment\": \"unis-smart-campus\",\n"
                 + "		\"lat\": \"51.1\",\n"
-                + "		\"qk\": \"Power\",\n"
+                + "		\"qk\": \"ChemicalAgentAtmosphericConcentrationCO\",\n"
                 + "		\"alt\": \"53\",\n"
-                + "		\"unit\": \"Watts\"\n"
+                + "		\"unit\": \"Watt\"\n"
                 + "	}]\n"
                 + "}";
 

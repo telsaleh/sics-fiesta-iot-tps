@@ -32,7 +32,7 @@ public class RegistryHandler extends ServerResource {
                
         String result = getAllResources();
         StringRepresentation response = new StringRepresentation(result);
-        response.setMediaType(MediaType.APPLICATION_JSON);
+        response.setMediaType(MediaType.valueOf("application/ld+json"));
         
         return response;
     }

@@ -2,6 +2,7 @@ package uk.ac.surrey.ee.iot.smartics.endpoint.restlet;
 
 import org.restlet.Application;
 import org.restlet.Restlet;
+import org.restlet.data.MediaType;
 import org.restlet.routing.Router;
 import uk.ac.surrey.ee.iot.smartics.endpoint.restlet.resource.IotServiceHandler;
 import uk.ac.surrey.ee.iot.smartics.endpoint.restlet.resource.RegistryHandler;
@@ -22,6 +23,7 @@ public class RestReqApplication extends Application {
     public synchronized Restlet createInboundRoot() {
 
         Router router = new Router(getContext());
+        getMetadataService().addExtension("APPLICATION_JSON_LD", MediaType.valueOf("application/ld+json"));
 
         router.attach(REGISTRY_PREFIX + GET_ALL_RES_PATH, RegistryHandler.class);        //GET
         router.attach(TPS_PREFIX + GET_OBS_PATH, TpsHandler.class);                //POST   

@@ -77,7 +77,7 @@ public class FiestaObsAnnotator {
                 try {
                     OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
                     ontModel.setStrictMode(true);
-                    ontModel.add(fiestaOnt);                    
+                    ontModel.add(fiestaOnt);
 
                     //ontology prefixes
                     ontModel.setNsPrefix("sics", INDV_NAMESPACE);
@@ -89,38 +89,74 @@ public class FiestaObsAnnotator {
                     String TIME_PREFIX = ontModel.getNsPrefixURI("time");
 
                     //classes
-                    OntClass observationClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "Observation"); //ok
-                    OntClass sensingDevClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getIotType()); //ok
-                    OntClass sensorOutputClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "SensorOutput"); //ok
-                    OntClass observationValueClass = (OntClass) ontModel.getOntClass(SSN_PREFIX + "ObservationValue"); //ok
-                    OntClass unitClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getUnit()); //ok
-                    OntClass qkClass = (OntClass) ontModel.getOntClass(M3_LITE_PREFIX + ob.getQk()); //ok
+                    OntClass observationClass = null;
+                    OntClass sensingDevClass = null;
+                    OntClass sensorOutputClass = null;
+                    OntClass observationValueClass = null;
+                    OntClass unitClass = null;
+                    OntClass qkClass = null;
 
-                    OntClass geoPointClass = (OntClass) ontModel.getOntClass(GEO_PREFIX + "Point"); //ok
-                    OntClass timeIntervalClass = (OntClass) ontModel.getOntClass(TIME_PREFIX + "Instant");
+                    OntClass geoPointClass = null;
+                    OntClass timeIntervalClass = null;
 
                     //object properties
-                    Property observedBy = ontModel.getProperty(SSN_PREFIX + "observedBy"); //ok
-                    Property observedProperty = ontModel.getProperty(SSN_PREFIX + "observedProperty"); //ok
-                    Property geoLocation = ontModel.getProperty(GEO_PREFIX + "location"); //ok
-                    Property hasUnit = ontModel.getProperty(IOT_LITE_PREFIX + "hasUnit"); //ok
-                    Property observationResult = ontModel.getProperty(SSN_PREFIX + "observationResult"); //ok
-                    Property obserationSamplingTime = ontModel.getProperty(SSN_PREFIX + "observationSamplingTime"); //ok
-                    Property hasValue = ontModel.getProperty(SSN_PREFIX + "hasValue");
+                    Property observedBy = null;
+                    Property observedProperty = null;
+                    Property geoLocation = null;
+                    Property hasUnit = null;
+                    Property observationResult = null;
+                    Property obserationSamplingTime = null;
+                    Property hasValue = null;
 
                     //datatype properties
-                    Property geoLat = ontModel.getProperty(GEO_PREFIX + "lat"); //ok
-                    Property geoLong = ontModel.getProperty(GEO_PREFIX + "long"); //ok
-                    Property geoAlt = ontModel.getProperty(GEO_PREFIX + "alt"); //ok
-                    Property geoAltRel = ontModel.getProperty(IOT_LITE_PREFIX + "altRelative"); //ok
-                    Property geoRelLoc = ontModel.getProperty(IOT_LITE_PREFIX + "relativeLocation"); //ok
-                    Property inXSDDateTime = ontModel.getProperty(TIME_PREFIX + "inXSDDateTime"); //ok
-                    Property hasDataValue = ontModel.getProperty(DUL_PREFIX + "hasDataValue"); //ok
+                    Property geoLat = null;
+                    Property geoLong = null;
+                    Property geoAlt = null;
+                    Property geoAltRel = null;
+                    Property geoRelLoc = null;
+                    Property inXSDDateTime = null;
+                    Property hasDataValue = null;
+
+                    try {
+                        observationClass = ontModel.getOntResource(SSN_PREFIX + "Observation").asClass(); //ok
+                        sensingDevClass = ontModel.getOntResource(M3_LITE_PREFIX + ob.getIotType()).asClass(); //ok
+                        sensorOutputClass = ontModel.getOntResource(SSN_PREFIX + "SensorOutput").asClass(); //ok
+                        observationValueClass = ontModel.getOntResource(SSN_PREFIX + "ObservationValue").asClass(); //ok
+                        unitClass = ontModel.getOntResource(M3_LITE_PREFIX + ob.getUnit()).asClass(); //ok
+                        qkClass = ontModel.getOntResource(M3_LITE_PREFIX + ob.getQk()).asClass(); //ok
+
+                        geoPointClass = ontModel.getOntResource(GEO_PREFIX + "Point").asClass(); //ok
+                        timeIntervalClass = ontModel.getOntResource(TIME_PREFIX + "Instant").asClass();
+
+                        //object properties
+                        observedBy = ontModel.getObjectProperty(SSN_PREFIX + "observedBy").asObjectProperty(); //ok
+                        observedProperty = ontModel.getObjectProperty(SSN_PREFIX + "observedProperty").asObjectProperty(); //ok
+                        geoLocation = ontModel.getObjectProperty(GEO_PREFIX + "location").asObjectProperty(); //ok
+                        hasUnit = ontModel.getObjectProperty(IOT_LITE_PREFIX + "hasUnit").asObjectProperty(); //ok
+                        observationResult = ontModel.getObjectProperty(SSN_PREFIX + "observationResult").asObjectProperty(); //ok
+                        obserationSamplingTime = ontModel.getObjectProperty(SSN_PREFIX + "observationSamplingTime").asObjectProperty(); //ok
+                        hasValue = ontModel.getObjectProperty(SSN_PREFIX + "hasValue").asObjectProperty();
+
+                        //datatype properties                    
+                        inXSDDateTime = ontModel.getDatatypeProperty(TIME_PREFIX + "inXSDDateTime").asDatatypeProperty(); //ok
+                        hasDataValue = ontModel.getDatatypeProperty(DUL_PREFIX + "hasDataValue").asDatatypeProperty(); //ok
+
+                        //annotation properties                    
+                        geoLat = ontModel.getAnnotationProperty(GEO_PREFIX + "lat").asAnnotationProperty(); //ok
+                        geoLong = ontModel.getAnnotationProperty(GEO_PREFIX + "long").asAnnotationProperty(); //ok
+                        geoAlt = ontModel.getAnnotationProperty(GEO_PREFIX + "alt").asAnnotationProperty(); //ok
+                        geoAltRel = ontModel.getAnnotationProperty(IOT_LITE_PREFIX + "altRelative").asAnnotationProperty(); //ok
+                        geoRelLoc = ontModel.getAnnotationProperty(IOT_LITE_PREFIX + "relativeLocation").asAnnotationProperty(); //ok
+                    } catch (NullPointerException npe) {
+                        npe.printStackTrace();
+                        System.out.println("Check Ontology Resources");
+                    }
 
                     //sensing device
                     String sensingDevUri = INDV_NAMESPACE + sensingDevNamePrefix + ob.getResourceId();
                     Individual sensorDevIndiv = ontModel.createIndividual(sensingDevUri, sensingDevClass);
 
+                    //generate unique hash id for observations, sensor outputs, observation values and time instants.
                     String obsInstanceId = ob.getResourceId().concat("@" + ob.getTimestamp());
                     Hashids obsHashId = new Hashids(obsInstanceId, 10);
                     Hashids timeHashId = new Hashids(ob.getTimestamp(), 10);
@@ -200,7 +236,7 @@ public class FiestaObsAnnotator {
 
         String test = "{\n"
                 + "	\"Observations\": [{\n"
-                + "		\"iot-type\": \"unis-smart-campus\",\n"
+                + "		\"iot-type\": \"EnergyMeter\",\n"
                 + "		\"timestamp\": \"2016-12-23T18:56:00.001\",\n"
                 + "		\"mobile\": \"False\",\n"
                 + "		\"resourceId\": \"sc-sics-sp-001-Power\",\n"
@@ -215,7 +251,7 @@ public class FiestaObsAnnotator {
                 + "		\"lat\": \"51.1\",\n"
                 + "		\"qk\": \"Power\",\n"
                 + "		\"alt\": \"53\",\n"
-                + "		\"unit\": \"Watts\"\n"
+                + "		\"unit\": \"Watt\"\n"
                 + "	}]\n"
                 + "}";
 

@@ -32,7 +32,7 @@ public class ResourceHandler extends ServerResource {
 
         String result = getResource();
         StringRepresentation response = new StringRepresentation(result);
-        response.setMediaType(MediaType.APPLICATION_JSON);
+        response.setMediaType(MediaType.valueOf("application/ld+json"));
 
         return response;
     }
