@@ -58,6 +58,8 @@ public class TpsHandler extends ServerResource {
     }
 
     public String getSmartIcsObservation(String tpsRequest) {
+        
+//        System.out.println("client TPS request payload: " + tpsRequest);
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -92,7 +94,7 @@ public class TpsHandler extends ServerResource {
         final ClientResource smartIcsClientResource = new ClientResource(context, sicsURL);
         smartIcsClientResource.setNext(client);
         smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
-        System.out.println("TPS request: " + tpsRequest);
+//        System.out.println("formatted local TPS request payload: " + tpsRequest);
         String errorMessage = "";
         try {
             Representation result = smartIcsClientResource
@@ -111,6 +113,7 @@ public class TpsHandler extends ServerResource {
             Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
             System.out.println("ERROR IS THIS: " + ex.getLocalizedMessage());
             errorMessage = ex.getLocalizedMessage();
+            System.out.println("client TPS request payload: " + tpsRequest);
         }
         return errorMessage;
 

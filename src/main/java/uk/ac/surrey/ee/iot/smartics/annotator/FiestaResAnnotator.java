@@ -151,6 +151,7 @@ public class FiestaResAnnotator {
 
             } catch (NullPointerException npe) {
                 npe.printStackTrace();
+                System.out.println("Resource in question: " + res.getResourceId());
             }
 
             //system individual (smart-building)
