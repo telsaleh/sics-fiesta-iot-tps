@@ -177,7 +177,11 @@ public class FiestaObsAnnotator {
                     String obsValueUri = INDV_NAMESPACE + obsValueNamePrefix + obsInstanceHash;
                     Individual obsValueIndiv = ontModel.createIndividual(obsValueUri, observationValueClass);
                     sensorOutputIndiv.setPropertyValue(hasValue, obsValueIndiv);
-                    obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDdouble));
+                    String dataValue = ob.getDataValue();
+                    if (dataValue.equalsIgnoreCase("NaN"))
+                    obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDstring));
+                    else
+                        obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDdouble));
 
                     //observed property
                     String obsPropUri = INDV_NAMESPACE + obsPropNamePrefix + ob.getQk();

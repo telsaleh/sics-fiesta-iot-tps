@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.Instant;
 import javax.xml.bind.JAXBException;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ontology.Individual;
@@ -79,7 +78,7 @@ public class FiestaResAnnotator {
             String GEO_PREFIX = fiestaOnt.getNsPrefixURI("geo");
             String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
             String TIME_PREFIX = ontModel.getNsPrefixURI("time");
-
+            //classes
             OntClass deviceClass = null;
             OntClass sensingDevClass = null;
             OntClass systemClass = null;
@@ -153,7 +152,7 @@ public class FiestaResAnnotator {
                 npe.printStackTrace();
                 System.out.println("Resource in question: " + res.getResourceId());
             }
-
+            //create individuals
             //system individual (smart-building)
             String sBuildingSystemIndivUri = INDV_NS_PREFIX + systemNamePrefix + res.getSystem();
             Individual sBuildingSystemIndiv = ontModel.createIndividual(sBuildingSystemIndivUri, systemClass);
@@ -262,11 +261,6 @@ public class FiestaResAnnotator {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         Resources res = objectMapper.readValue(test, Resources.class);
 
-//        Observation ob = new Observation("sc-si-sc-001-temp", "sc-si-sc-001", "smart-ics", "desk-ICS-02-18", "false", "unis-smart-campus", "sensor", "AmbientTemperature", "Celsius", "automatic", "51.1", "-0.1", "50", "2", "2002-05-30T09:30:10.5", "23.1");
-//        ArrayList<Observation> obsArray = new ArrayList<>();
-//        obsArray.add(ob);
-//        Observations obs = new Observations(); 
-//        obs.setObservations(obsArray);
         FiestaResAnnotator ri = new FiestaResAnnotator();
         String result = ri.annotateResources(res);
         System.out.println(result);
