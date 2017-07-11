@@ -178,10 +178,11 @@ public class FiestaObsAnnotator {
                     Individual obsValueIndiv = ontModel.createIndividual(obsValueUri, observationValueClass);
                     sensorOutputIndiv.setPropertyValue(hasValue, obsValueIndiv);
                     String dataValue = ob.getDataValue();
-                    if (dataValue.equalsIgnoreCase("NaN"))
-                    obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDstring));
-                    else
+                    if (dataValue.contains("NaN")) {
+                        obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDstring));
+                    } else {
                         obsValueIndiv.setPropertyValue(hasDataValue, ontModel.createTypedLiteral(ob.getDataValue(), XSDDatatype.XSDdouble));
+                    }
 
                     //observed property
                     String obsPropUri = INDV_NAMESPACE + obsPropNamePrefix + ob.getQk();
