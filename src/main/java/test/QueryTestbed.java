@@ -20,11 +20,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.Query;
@@ -37,6 +39,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.RDFLanguages;
 import org.apache.jena.util.FileManager;
+import org.apache.jena.util.iterator.ExtendedIterator;
 import org.restlet.Client;
 import org.restlet.Context;
 import org.restlet.data.MediaType;
@@ -53,40 +56,40 @@ import uk.ac.surrey.ee.iot.smartics.endpoint.servlet.DefaultServletListener;
  * @author te0003
  */
 public class QueryTestbed {
-   
+
     //URLs
-    public final String GET_ALL_RESOURCES_URL   = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/registry/getAllResources";
-    public final String GET_RESOURCE_URL1       = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/resource/sc-sics-sp-001-power";
-    public final String GET_RESOURCE_URL2       = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/resource/sc-sics-sp-002-power";
-    public final String GET_OBSERVATIONS_URL    = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/tps/getObservations";
+    public final String GET_ALL_RESOURCES_URL = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/registry/getAllResources";
+    public final String GET_RESOURCE_URL1 = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/resource/sc-sics-sp-001-power";
+    public final String GET_RESOURCE_URL2 = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/resource/sc-sics-sp-002-power";
+    public final String GET_OBSERVATIONS_URL = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/tps/getObservations";
+    public final String GET_OBSERVATION_URL1 = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/service/sc-sics-sp-001-power";
 
     //Requests
-    public final String GET_OBSERVATIONS_REQUEST1 =   "C://Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/request/getObs.json";
+    public final String GET_OBSERVATIONS_REQUEST1 = "C://Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/request/getObs.json";
 
     //Ontology files
-    protected final String FIESTA_ONT_FILE_DEPLOY   =   "web/ontologies/fiesta-iot/fiesta-iot.owl";
-    protected final String FIESTA_ONT_FILE_RUN      =   "file:///C://Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/ontologies/fiesta-iot/fiesta-iot.owl";
+    protected final String FIESTA_ONT_FILE_DEPLOY = "web/ontologies/fiesta-iot/fiesta-iot.owl";
+    protected final String FIESTA_ONT_FILE_RUN = "file:///C://Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/ontologies/fiesta-iot/fiesta-iot.owl";
 
     //SPARQL Queries
-    protected final String SPARQL_QUERY1            = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/sensors_declared.rq";
-    protected final String SPARQL_QUERY2            = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/sensing_device_list.rq";
-    protected final String SPARQL_DESCRIBE_SENSORS  = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/describe_sensors.rq";
-    protected final String SPARQL_GET_SUBCLASSES    = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/get_subclasses.rq";
-    protected final String SPARQL_GET_OBSERVATIONS  = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/get_observations.rq";
-    protected final String SPARQL_GET_RES_OBS       = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/discover_and_get_obs.rq";
-    
+    protected final String SPARQL_QUERY1 = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/sensors_declared.rq";
+    protected final String SPARQL_QUERY2 = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/sensing_device_list.rq";
+    protected final String SPARQL_DESCRIBE_SENSORS = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/describe_sensors.rq";
+    protected final String SPARQL_GET_SUBCLASSES = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/get_subclasses.rq";
+    protected final String SPARQL_GET_OBSERVATIONS = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/get_observations.rq";
+    protected final String SPARQL_GET_RES_OBS = "C:/Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/query/discover_and_get_obs.rq";
+
     //RDF Models
     public OntModel ontModel;
-    
+
     public final Context context = new Context();
     public Client client = new Client(new Context(), Protocol.HTTP);
-    
-     public QueryTestbed() {                
-        
+
+    public QueryTestbed() {
+
         client.getContext().getParameters().add("maxConnectionsPerHost", "5");
         client.getContext().getParameters().add("maxTotalConnections", "5");
-        
-        
+
         //instantiate models
         String ontFilePath = "";
         try {
@@ -97,12 +100,12 @@ public class QueryTestbed {
         Model fiestaOnt = FileManager.get().loadModel(ontFilePath);
 
         ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
-        ontModel.setStrictMode(true);        
+        ontModel.setStrictMode(true);
         ontModel.add(fiestaOnt);
-        
+
     }
 
-    public void queryDataset(String datasetString, String queryString) {        
+    public void queryDataset(String datasetString, String queryString) {
 
         System.out.println("--------------------------------------------------");
         System.out.println("\nQuery Result");
@@ -118,7 +121,7 @@ public class QueryTestbed {
                 Instant postQuery = Instant.now();
                 qDuration = postQuery.toEpochMilli() - preQuery.toEpochMilli();
                 ResultSetFormatter.outputAsCSV(System.out, results);
-            } 
+            }
 //            else if (query.isDescribeType()) {
 //                Model m = qexec.execDescribe();
 //                m.write(System.out, "TURTLE");
@@ -133,7 +136,7 @@ public class QueryTestbed {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        
+
         final ClientResource sicsClientResource = new ClientResource(context, url);
         sicsClientResource.setNext(client);
         sicsClientResource.accept(MediaType.APPLICATION_JSON);
@@ -161,7 +164,6 @@ public class QueryTestbed {
             e.printStackTrace();
         }
 
-        
         final ClientResource smartIcsClientResource = new ClientResource(context, GET_OBSERVATIONS_URL);
         smartIcsClientResource.setNext(client);
 //        smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
@@ -180,11 +182,40 @@ public class QueryTestbed {
         return errorMessage;
 
     }
-    
+
     public void appendToDataset(String datasetString) {
-        
+
         ontModel.read(new ByteArrayInputStream(datasetString.getBytes()), null, RDFLanguages.strLangJSONLD);
+
+    }
+
+    public void printDataset() {
+
+        String ontFilePath = "";
+        try {
+            ontFilePath = DefaultServletListener.servletContext.getRealPath(FIESTA_ONT_FILE_DEPLOY);
+        } catch (NoClassDefFoundError fe) {
+            ontFilePath = FIESTA_ONT_FILE_RUN;
+        }
+        Model fiestaOnt = FileManager.get().loadModel(ontFilePath);
+
+        Model mIndividuals = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        mIndividuals.setNsPrefixes(ontModel.getNsPrefixMap());
+        ExtendedIterator<Individual> iterIndv = ontModel.listIndividuals();
+        while (iterIndv.hasNext()) {
+            Individual indv = (Individual) iterIndv.next();
+            mIndividuals.add(indv.getOntModel());
+        }
+        mIndividuals.remove(fiestaOnt);
         
+        Model tpsModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
+        tpsModel.add(mIndividuals);
+
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        tpsModel.write(bos, RDFLanguages.strLangJSONLD);
+        String sicsAnnotated = bos.toString();
+        System.out.println(sicsAnnotated);
+
     }
 
     public static void main(String[] args) {
@@ -194,23 +225,23 @@ public class QueryTestbed {
 
         result = qr.getResources(qr.GET_RESOURCE_URL1);
         qr.appendToDataset(result);
-        result = qr.getResources(qr.GET_RESOURCE_URL2);
+        result = qr.getResources(qr.GET_OBSERVATION_URL1);
         qr.appendToDataset(result);
-        result = qr.getObservations(qr.GET_OBSERVATIONS_REQUEST1);
-        qr.appendToDataset(result);
-        
+//        result = qr.getObservations(qr.GET_OBSERVATIONS_REQUEST1);
+//        qr.appendToDataset(result);
+
 //        System.out.println(result);
+        qr.printDataset();
 
-        String queryString = "";
-        try {
-            queryString = org.apache.commons.io.FileUtils.readFileToString(new File(qr.SPARQL_GET_RES_OBS));
-            System.out.println(result);
-            qr.queryDataset(result, queryString);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
+//        String queryString = "";
+//        try {
+//            queryString = org.apache.commons.io.FileUtils.readFileToString(new File(qr.SPARQL_GET_RES_OBS));
+//            System.out.println(result);
+//            qr.queryDataset(result, queryString);
+//        } catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
     }
 
 }
