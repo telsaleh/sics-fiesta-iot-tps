@@ -12,7 +12,6 @@
     <!ENTITY ssn "http://purl.oclc.org/NET/ssnx/ssn#">
     <!ENTITY geo "http://www.w3.org/2003/01/geo/wgs84_pos#">
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-    <!ENTITY terms "http://purl.org/dc/terms/">
     <!ENTITY xml "http://www.w3.org/XML/1998/namespace">
     <!ENTITY onemtom "http://www.onem2m.org/ontology/Base_Ontology/base_ontology#">
     <!ENTITY dul "http://www.loa.istc.cnr.it/ontologies/DUL.owl#">
@@ -36,7 +35,6 @@
      xmlns:ssn="http://purl.oclc.org/NET/ssnx/ssn#"
      xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:terms="http://purl.org/dc/terms/"
      xmlns:xml="http://www.w3.org/XML/1998/namespace"
      xmlns:onemtom="http://www.onem2m.org/ontology/Base_Ontology/base_ontology#"
      xmlns:qudt="http://data.qudt.org/qudt/owl/1.0.0/unit.owl#"
@@ -46,19 +44,19 @@
      xmlns:dcterms="http://purl.org/dc/terms/"
      xmlns:dc="http://purl.org/dc/elements/1.1/">
     <owl:Ontology rdf:about="http://purl.org/iot/ontology/fiesta-iot#">
-        <owl:versionInfo>2.0</owl:versionInfo>
+        <owl:versionInfo>3.1</owl:versionInfo>
         <dc:description rdf:resource="http://ontology.fiesta-iot.eu/ontologyDocs/fiesta-iot.png"/>
         <dc:description rdf:resource="http://ontology.fiesta-iot.eu/ontologyDocs/resourcegraph.png"/>
         <dc:description rdf:resource="http://ontology.fiesta-iot.eu/ontologyDocs/observationgraph.png"/>
         <dc:description rdf:resource="http://ontology.fiesta-iot.eu/ontologyDocs/resourceannotation.png"/>
         <dc:description rdf:resource="http://ontology.fiesta-iot.eu/ontologyDocs/observationannotation.png"/>
-        <dc:creator xml:lang="en">Rachit Agarwal, Inria, Paris</dc:creator>
-        <dc:creator xml:lang="en">David Gomez, UC, Santander</dc:creator>
-        <dc:creator xml:lang="en">Tarek Elsaleh, UNIS, Surrey</dc:creator>
-        <dc:creator xml:lang="en">Luis Sanchez, UC, Santander</dc:creator>
-        <dc:creator xml:lang="en">Jorge Lanza, UC, Santander</dc:creator>
-        <dc:creator xml:lang="en">Amelie Gyrard, NUIG, Galway</dc:creator>
-        <dc:contributor xml:lang="en">Garvita Bajaj, Inria, Paris</dc:contributor>
+        <dc:contributor xml:lang="en">Rachit Agarwal, Inria, Paris</dc:contributor>
+        <dc:contributor xml:lang="en">David Gomez, UC, Santander</dc:contributor>
+        <dc:contributor xml:lang="en">Tarek Elsaleh, UNIS, Surrey</dc:contributor>
+        <dc:contributor xml:lang="en">Luis Sanchez, UC, Santander</dc:contributor>
+        <dc:contributor xml:lang="en">Jorge Lanza, UC, Santander</dc:contributor>
+        <dc:contributor xml:lang="en">Amelie Gyrard, NUIG, Galway</dc:contributor>
+        <dc:contributor xml:lang="en">Garvita Bajaj, Inria, Paris (Past)</dc:contributor>
         <dc:description xml:lang="en">Many testbeds owning devices or applications interacting with the sensors, store their inherent observations and other related data in their own proprietary format. In other words, making a testbed independent and isolated from others that cannot directly interact with each other. Differences in the data format lead to interoperability issues between the testbeds and much work has to be done in order to ensure the compatibility. One has to understand different data formats and create the mapping between them. As a result, a testbed must understand other testbed&apos;s format and create the mapping both while sending and receiving information. One method to accomplish interoperability is through the usage of semantic-based technologies to annotate all the information shared by the platforms. Nevertheless, some of the relevant existing ontologies promise interoperability but: 
 
 - do not address the problem to describe the observation in an interoperable manner to ease further tasks, such as reasoning, 
@@ -75,16 +73,16 @@ For more details please see:
 - FIESTA-IoT Consortium (R. Agarwal editor), &quot;Deliverable D3.1.2 Semantic Models for Testbeds, Interoperability and Mobility Support, and Best Practices&quot;, project FIESTA-IoT deliverable, 2016.
 - FIESTA-IoT Consortium (R. Agarwal editor), &quot;Deliverable D3.1.1 Semantic Models for Testbeds, Interoperability and Mobility Support, and Best Practices&quot;, project FIESTA-IoT deliverable, 2016.
 
-We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Com4Innov, Inria, LAAS-CNRS, University of Thessaly, for their valuable comments.
+We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Inria, and other open call testbeds for their valuable comments. Please report any errors to rachit.agarwal@inria.fr. 
         </dc:description>
         <vann:preferredNamespaceUri>http://purl.org/iot/ontology/fiesta-iot#</vann:preferredNamespaceUri>
         <vann:preferredNamespacePrefix>fiesta-iot</vann:preferredNamespacePrefix>
         <dc:rights>Copyright EU H2020 FIESTA-IoT</dc:rights>
         <rdfs:label rdf:datatype="&xsd;string">FIESTA-IoT</rdfs:label>
-        <dc:issued>2016-04-28</dc:issued>
+        <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2016-04-28</dcterms:issued>
         <rdfs:comment xml:lang="en">After a thorough analysis of existing Internet of Things (IoT) related ontologies, we propose FIESTA-IoT Ontology that aims to achieve semantic interoperability among heterogeneous testbeds. The Ontology is framed within the EU H2020 FIESTA-IoT project, that aims to seamlessly support the federation of testbeds through the usage of semantic-based technologies. The  FIESTA-IoT ontology takes inspiration from the well-known Noy et al. methodology for reusing and interconnecting existing ontologies. To build the ontology, we leverage a number of core concepts from various mainstream ontologies and taxonomies, such as Semantic Sensor Network (SSN), M3-lite (a lite version of M3 ontology), WGS84, IoT-lite, Time, and DUL ontology. Please report any errors to rachit.agarwal@inria.fr</rdfs:comment>
         <dc:title xml:lang="en">FIESTA-IoT Ontology</dc:title>
-        <dc:modified>2017-04-20</dc:modified>
+        <dcterms:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2017-11-27</dcterms:modified>
         <dcterms:bibliographicCitation xml:lang="en">R. Agarwal, D. Fernandez, T. Elsaleh, A. Gyrard, J. Lanza, L. Sanchez, N. Georgantas, V. Issarny, &quot;Unified IoT Ontology to Enable Interoperability and Federation of Testbeds&quot;, 3rd IEEE WF-IoT, Reston, VA, USA, 12-14 December 2016. (https://hal.inria.fr/hal-01386917/document)</dcterms:bibliographicCitation>
         <dcterms:bibliographicCitation xml:lang="en">FIESTA-IoT Consortium (R. Agarwal editor), &quot;Deliverable D3.1.2 Semantic Models for Testbeds, Interoperability and Mobility Support, and Best Practices&quot;, project FIESTA-IoT deliverable, 2016.</dcterms:bibliographicCitation>
         <dcterms:bibliographicCitation xml:lang="en">FIESTA-IoT Consortium (R. Agarwal editor), &quot;Deliverable D3.1.1 Semantic Models for Testbeds, Interoperability and Mobility Support, and Best Practices&quot;, project FIESTA-IoT deliverable, 2016.</dcterms:bibliographicCitation>
@@ -92,6 +90,14 @@ We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Com
     
 
     <!-- HISTORY
+        3.1 release: Last Updated: November 27 2017
+            - new version of m3-lite taxonomy integrated.
+
+        3.0 release: Last Updated: July 29 2017
+            - ssn:MeasurementProperty and its subclasses added (Accuracy, Frequency, Latency, Precision, Resolution, ResponseTime)
+            - hasDataValue now has xsd:string as well to support commands. The max length is set to 255.
+            - new version of m3-lite taxonomy integrated.
+
         2.0 release: Last Updated: April 20 2017
             - Integrate new version of M3-lite taxonomy
             - more clear definitions for concepts
@@ -192,13 +198,13 @@ We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Com
 
     <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/contributor"/>
 
-    <!-- http://purl.org/dc/elements/1.1/issued -->
+    <!-- http://purl.org/dc/terms/issued -->
 
-    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/issued"/>
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/issued"/>
 
-    <!-- http://purl.org/dc/elements/1.1/modified -->
+    <!-- http://purl.org/dc/terms/modified -->
 
-    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/modified"/>
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/terms/modified"/>
 
     <!-- http://purl.org/dc/elements/1.1/date -->
 
@@ -398,6 +404,7 @@ We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Com
         <owl:equivalentProperty rdf:resource="&onemtom;hasMetaData"/>
         <rdfs:domain rdf:resource="&ssn;ObservationValue"/>
         <rdfs:domain rdf:resource="&ssn;Sensor"/>
+        <rdfs:domain rdf:resource="&ssn;MeasurementProperty"/>
         <rdfs:range rdf:resource="&qu;Unit"/>
         <rdfs:comment>Links the sensor with the units of the quantity kind it measures (e.g. A sensor -sensor1- measures temperature in Celsius: senso1 hasUnit Celsius).</rdfs:comment>
         <rdfs:label xml:lang="en">Has Unit</rdfs:label>
@@ -652,6 +659,29 @@ We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Com
     </owl:ObjectProperty>
     
 
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#hasMeasurementCapability -->
+
+    <owl:ObjectProperty rdf:about="&ssn;hasMeasurementCapability">
+        <rdfs:comment>Relation from a Sensor to a MeasurementCapability describing the measurement properties of the sensor.</rdfs:comment>
+        <rdfs:domain rdf:resource="&ssn;Sensor"/>
+        <rdfs:range rdf:resource="&ssn;MeasurementCapability"/>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>has measurement  capability</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#hasMeasurementProperty -->
+
+    <owl:ObjectProperty rdf:about="&ssn;hasMeasurementProperty">
+        <rdfs:comment>Relation from a MeasurementCapability to a MeasurementProperty.  For example, to an accuracy (see notes at MeasurementCapability).</rdfs:comment>
+        <rdfs:domain rdf:resource="&ssn;MeasurementCapability"/>
+        <rdfs:range rdf:resource="&ssn;MeasurementProperty"/>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>has measurement property</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:ObjectProperty>
 
     <!-- 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -763,10 +793,26 @@ We further acknowledge, testbed provider such as SmartSantander, UniS, KETI, Com
 
     <owl:DatatypeProperty rdf:about="&dul;hasDataValue">
         <rdfs:domain rdf:resource="&ssn;ObservationValue"/>
-        <rdfs:range rdf:resource="&xsd;boolean"/>
-        <rdfs:range rdf:resource="&xsd;double"/>
-        <rdfs:range rdf:resource="&xsd;dateTime"/>
-        <rdfs:range rdf:resource="&xsd;int"/>
+        <rdfs:domain rdf:resource="&ssn;MeasurementProperty"/>
+        <rdfs:domain rdf:resource="&mthreelite;Direction"/>
+        <rdfs:range>
+            <rdfs:Datatype>
+                <owl:unionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="&xsd;boolean"/>
+                    <rdf:Description rdf:about="&xsd;dateTime"/>
+                    <rdf:Description rdf:about="&xsd;double"/>
+                    <rdf:Description rdf:about="&xsd;int"/>
+                    <rdfs:Datatype>
+                        <owl:onDatatype rdf:resource="&xsd;string"/>
+                        <owl:withRestrictions rdf:parseType="Collection">
+                            <rdf:Description>
+                                <xsd:maxLength rdf:datatype="&xsd;int">255</xsd:maxLength>
+                            </rdf:Description>
+                        </owl:withRestrictions>
+                    </rdfs:Datatype>
+                </owl:unionOf>
+            </rdfs:Datatype>
+        </rdfs:range>
         <rdfs:comment>A datatype property that encodes values from a datatype for an Entity. 
 There are several ways to encode values in DOLCE (Ultralite):
 
@@ -1197,6 +1243,13 @@ O&amp;M conflates what we have as SensorOutput and ObservationValue into observa
                 <owl:onProperty rdf:resource="&iot-lite;hasUnit"/>
                 <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
                 <owl:onClass rdf:resource="&qu;Unit"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&ssn;hasMeasurementCapability"/>
+                <owl:qualifiedCardinality rdf:datatype="&xsd;nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="&ssn;MeasurementCapability"/>
             </owl:Restriction>
         </rdfs:subClassOf>
         <dc:source>skos:exactMatch &apos;sensor&apos; [SensorML OGC-0700]
@@ -5763,7 +5816,7 @@ O&amp;M allows sensors, methods, instruments, systems, algorithms and process ch
     <!-- http://purl.org/iot/vocab/m3-lite#WaterO2IonSensor -->
 
     <owl:Class rdf:about="&mthreelite;WaterO2IonSensor">
-        <rdfs:subClassOf rdf:resource="&mthreelite;SensingDevice"/>
+        <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
         <rdfs:comment xml:lang="en">Sensor used to measure O2 concentration level in the water.</rdfs:comment>
         <rdfs:label xml:lang="en">Water O2 Ion Sensor</rdfs:label>
     </owl:Class>
@@ -5771,7 +5824,7 @@ O&amp;M allows sensors, methods, instruments, systems, algorithms and process ch
     <!-- http://purl.org/iot/vocab/m3-lite#WaterNH4IonSensor -->
 
     <owl:Class rdf:about="&mthreelite;WaterNH4IonSensor">
-        <rdfs:subClassOf rdf:resource="&mthreelite;SensingDevice"/>
+        <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
         <rdfs:comment xml:lang="en">Sensor used to measure NH4 concentration level in the water.</rdfs:comment>
         <rdfs:label xml:lang="en">Water NH4 Ion Sensor</rdfs:label>
     </owl:Class>
@@ -5779,7 +5832,7 @@ O&amp;M allows sensors, methods, instruments, systems, algorithms and process ch
     <!-- http://purl.org/iot/vocab/m3-lite#WaterNO3IonSensor -->
 
     <owl:Class rdf:about="&mthreelite;WaterNO3IonSensor">
-        <rdfs:subClassOf rdf:resource="&mthreelite;SensingDevice"/>
+        <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
         <rdfs:comment xml:lang="en">Sensor used to measure NO3 concentration level in the water.</rdfs:comment>
         <rdfs:label xml:lang="en">Water NO3 Ion Sensor</rdfs:label>
     </owl:Class>
@@ -5893,7 +5946,7 @@ O&amp;M allows sensors, methods, instruments, systems, algorithms and process ch
     <!-- http://purl.org/iot/vocab/m3-lite#ChemicalAgentAtmosphericConcentrationDust -->
 
     <owl:Class rdf:about="&mthreelite;ChemicalAgentAtmosphericConcentrationDust">
-        <rdfs:subClassOf rdf:resource="&mthreelite;ChemicalAgentAtmosphericConcentrationQuantityKind"/>
+        <rdfs:subClassOf rdf:resource="&mthreelite;ChemicalAgentAtmosphericConcentration"/>
         <rdfs:comment xml:lang="en">Measure of the concentration of dust suspended in the air.</rdfs:comment>
         <rdfs:label xml:lang="en">Chemical Agent Atmospheric Concentration Dust</rdfs:label>
     </owl:Class>
@@ -5921,6 +5974,314 @@ O&amp;M allows sensors, methods, instruments, systems, algorithms and process ch
         <rdfs:comment xml:lang="en">An electromotive force or potential difference expressed in volts (Source Google).</rdfs:comment>
         <rdfs:label xml:lang="en">Voltage</rdfs:label>
     </owl:Class>
+
+
+    <!-- http://purl.org/iot/vocab/m3-lite#VOCSensor -->
+
+    <owl:Class rdf:about="&mthreelite;VOCSensor">
+        <rdfs:subClassOf rdf:resource="&mthreelite;GaseousPollutantSensor"/>
+        <rdfs:comment xml:lang="en">Sensor that detects levels of Volatile Organic Components (VOC) in the environment.</rdfs:comment>
+        <rdfs:label xml:lang="en">Volatile Organic Compound (VOC) Sensor</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#IEEE802154InterfaceEnergyMeter -->
+
+    <owl:Class rdf:about="&mthreelite;IEEE802154InterfaceEnergyMeter">
+        <rdfs:subClassOf rdf:resource="&mthreelite;EnergyMeter"/>
+        <rdfs:comment xml:lang="en">Sensor that measures the power consumption of the IEEE802.15.4 interface nodes.</rdfs:comment>
+        <rdfs:label xml:lang="en">IEEE802.15.4 Interface Energy Meter</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#BoardVoltageSensor -->
+
+    <owl:Class rdf:about="&mthreelite;BoardVoltageSensor">
+        <rdfs:subClassOf rdf:resource="&mthreelite;VoltageSensor"/>
+        <rdfs:comment xml:lang="en">Sensor used to measure board input voltage.</rdfs:comment>
+        <rdfs:label xml:lang="en">Board Voltage Sensor</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#DeviceUptimeClock -->
+
+    <owl:Class rdf:about="&mthreelite;DeviceUptimeClock">
+        <rdfs:subClassOf rdf:resource="&mthreelite;Clock"/>
+        <rdfs:comment xml:lang="en">Sensor that measures time a device is working and is available.</rdfs:comment>
+        <rdfs:label xml:lang="en">Device Uptime Clock</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#VoiceCommandSensor -->
+
+    <owl:Class rdf:about="&mthreelite;VoiceCommandSensor">
+        <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+        <rdfs:comment xml:lang="en">Sensor that uses automatic speech recognition technology to match or reject a recorded voice command according to a specified set of available voice commands.</rdfs:comment>
+        <rdfs:label xml:lang="en">Voice Command Sensor</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#DirectionOfArrivalSensor -->
+
+    <owl:Class rdf:about="&mthreelite;DirectionOfArrivalSensor">
+        <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+        <rdfs:comment xml:lang="en">Sensor that estimates the azimuth direction of sources relative to the sensor’s position.</rdfs:comment>
+        <rdfs:label xml:lang="en">Direction Of Arrival (DOA) Sensor</rdfs:label>
+    </owl:Class>
+
+
+    <!-- http://purl.org/iot/vocab/m3-lite#ChemicalAgentAtmosphericConcentrationNO -->
+
+    <owl:Class rdf:about="&mthreelite;ChemicalAgentAtmosphericConcentrationNO">
+        <rdfs:subClassOf rdf:resource="&mthreelite;ChemicalAgentAtmosphericConcentration"/>
+        <rdfs:comment xml:lang="en">Measure of the concentration of Carbon Monoxide (CO) gas suspended in the atmosphere.</rdfs:comment>
+        <rdfs:label xml:lang="en">Nitrogen Monoxide (NO) Chemical Agent Atmospheric Concentration</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#ChemicalAgentAtmosphericConcentrationSO2 -->
+
+    <owl:Class rdf:about="&mthreelite;ChemicalAgentAtmosphericConcentrationSO2">
+        <rdfs:subClassOf rdf:resource="&mthreelite;ChemicalAgentAtmosphericConcentration"/>
+        <rdfs:comment xml:lang="en">Measure of the concentration of Sulphur dioxide (SO2) gas suspended in the atmosphere.</rdfs:comment>
+        <rdfs:label xml:lang="en">Sulphur dioxide (SO2) Chemical Agent Atmospheric Concentration</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#ChemicalAgentAtmosphericConcentrationNH3 -->
+     
+    <owl:Class rdf:about="&mthreelite;ChemicalAgentAtmosphericConcentrationNH3">
+        <rdfs:subClassOf rdf:resource="&mthreelite;ChemicalAgentAtmosphericConcentration"/>
+        <rdfs:comment xml:lang="en">Measure of the concentration of Ammonia (NH3) gas suspended in the atmosphere.</rdfs:comment>
+        <rdfs:label xml:lang="en">Ammonia (NH3) Chemical Agent Atmospheric Concentration</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#ChemicalAgentAtmosphericConcentrationVOC -->
+
+    <owl:Class rdf:about="&mthreelite;ChemicalAgentAtmosphericConcentrationVOC">
+        <rdfs:subClassOf rdf:resource="&mthreelite;ChemicalAgentAtmosphericConcentration"/>
+        <rdfs:comment xml:lang="en">Measure of the concentration of Volatile Organic Compound gas suspended in the atmosphere.</rdfs:comment>
+        <rdfs:label xml:lang="en">Volatile Organic Compound Chemical Agent Atmospheric Concentration</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#DeviceUptime -->
+
+    <owl:Class rdf:about="&mthreelite;DeviceUptime">
+        <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+        <rdfs:comment xml:lang="en">Time a device is working and is available</rdfs:comment>
+        <rdfs:label xml:lang="en">Device Uptime</rdfs:label>
+    </owl:Class>
+    
+    <!-- http://purl.org/iot/vocab/m3-lite#VoiceCommand -->
+
+    <owl:Class rdf:about="&mthreelite;VoiceCommand">
+        <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+        <rdfs:comment xml:lang="en">A voice command to control a voice controlled system or environment, such as a smart home.</rdfs:comment>
+        <rdfs:label xml:lang="en">Voice Command</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#DirectionOfArrival -->
+
+    <owl:Class rdf:about="&mthreelite;DirectionOfArrival">
+        <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+        <rdfs:comment xml:lang="en">The azimuth direction of a  source relative to the azimuth direction of the DOA sensor.</rdfs:comment>
+        <rdfs:label xml:lang="en">Direction Of Arrival</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#PartsPerBillion -->
+
+    <owl:Class rdf:about="&mthreelite;PartsPerBillion">
+        <rdfs:subClassOf rdf:resource="&mthreelite;PPM"/>
+        <rdfs:comment xml:lang="en">It describes the concentration of something in parts per billion parts of water or soil, expressed in any (but common) unit of measurement.</rdfs:comment>
+        <rdfs:label xml:lang="en">Parts Per Billion</rdfs:label>
+    </owl:Class>
+    
+    <!-- http://purl.org/iot/vocab/m3-lite#DecibelMilliwatt -->
+
+    <owl:Class rdf:about="&mthreelite;DecibelMilliwatt">
+        <rdfs:subClassOf rdf:resource="&mthreelite;Decibel"/>
+        <rdfs:comment xml:lang="en">It describes power ratio in decibels of the measured power referenced to one milliwatt.</rdfs:comment>
+        <rdfs:label xml:lang="en">Decibel Milliwatt</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#VoiceCommandController -->
+
+    <owl:Class rdf:about="&mthreelite;VoiceCommandController">
+        <rdfs:subClassOf rdf:resource="&iot-lite;ActuatingDevice"/>
+        <rdfs:comment xml:lang="en">An actuating device called  that allows to semi-control the environment of the Voice Command Sensor.</rdfs:comment>
+        <rdfs:label xml:lang="en">Voice Command Controller</rdfs:label>
+    </owl:Class>
+
+    <!-- http://purl.org/iot/vocab/m3-lite#OxidationReductionPotentialSensor -->
+
+    <owl:Class rdf:about="&mthreelite;OxidationReductionPotentialSensor">
+        <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+        <rdfs:comment xml:lang="en">Measures the Water Oxidation Reduction Potential (ORP) as the tendency of a chemical species to acquire electrons and thereby be reduced.</rdfs:comment>
+         <rdfs:label xml:lang="en">Oxidation Reduction Potential (ORP) Sensor</rdfs:label>
+     </owl:Class>
+
+
+<!--  http://purl.org/iot/vocab/m3-lite#CountPeople -->
+
+<owl:Class rdf:about="&mthreelite;CountPeople">
+    <rdfs:subClassOf rdf:resource="&mthreelite;Count"/>
+    <rdfs:comment xml:lang="en">Number of people within a particular area</rdfs:comment>
+    <rdfs:label xml:lang="en">Count People</rdfs:label>
+</owl:Class>
+
+
+<!--  http://purl.org/iot/vocab/m3-lite#PeopleCountSensor -->
+
+<owl:Class rdf:about="&mthreelite;PeopleCountSensor">
+    <rdfs:subClassOf rdf:resource="&mthreelite;Counter"/>
+    <rdfs:comment xml:lang="en">Device used to count the number of people (eg, used within an indoor area).</rdfs:comment>
+    <rdfs:label xml:lang="en">People Count Sensor</rdfs:label>
+</owl:Class>
+
+<!-- http://purl.org/iot/vocab/m3-lite#TimeOfArrival -->
+
+<owl:Class rdf:about="&mthreelite;TimeOfArrival">
+    <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+    <rdfs:comment xml:lang="en">Estimated time till an object is arriving to a specific location (typically used in transportation).</rdfs:comment>
+    <rdfs:label xml:lang="en">Time of arrival</rdfs:label>
+</owl:Class>
+
+<!-- http://purl.org/iot/vocab/m3-lite#TimeOfArrivalSensor -->
+
+<owl:Class rdf:about="&mthreelite;TimeOfArrivalSensor">
+<rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+<rdfs:comment xml:lang="en">Virtual device that estimates the remaining time for an object to arrive at a specific location.</rdfs:comment>
+<rdfs:label xml:lang="en">Time of Arrival Sensor</rdfs:label>
+</owl:Class>
+
+
+<!-- http://purl.org/iot/vocab/m3-lite#Bus   -->
+
+<owl:Class rdf:about="&mthreelite;Bus">
+    <rdfs:subClassOf rdf:resource="&ssn;Platform"/>
+    <rdfs:comment xml:lang="en">A large motor vehicle carrying passengers by road, typically one serving the public on a fixed route and for a fare.</rdfs:comment>
+    <rdfs:label xml:lang="en">Bus</rdfs:label>
+</owl:Class>
+
+<!-- http://purl.org/iot/vocab/m3-lite#LoRaInterface -->
+
+<owl:Class rdf:about="&mthreelite;LoRaInterface">
+    <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+    <rdfs:comment xml:lang="en">This device is used for long range low power wireless communications. We can use this device to report network metrics (SNR, latence, etc.)</rdfs:comment>
+    <rdfs:label xml:lang="en">LoRa Interface</rdfs:label>
+</owl:Class>
+
+<!-- http://purl.org/iot/vocab/m3-lite#SNR -->
+
+<owl:Class rdf:about="&mthreelite;SNR">
+    <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+    <rdfs:comment xml:lang="en">Compares the level of a desired signal to the level of noise. </rdfs:comment>
+    <rdfs:label xml:lang="en">Signal to Noise Ratio</rdfs:label>
+</owl:Class>
+
+<!-- http://purl.org/iot/vocab/m3-lite#RSSI -->
+
+<owl:Class rdf:about="&mthreelite;RSSI">
+    <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+    <rdfs:comment xml:lang="en">Received Signal Strength Indicator is the signal strength in a wireless network environment.</rdfs:comment>
+    <rdfs:label xml:lang="en">Received Signal Strength Indicator</rdfs:label>
+</owl:Class>
+
+<!-- http://purl.org/iot/vocab/m3-lite#HDOP -->
+
+<owl:Class rdf:about="&mthreelite;HDOP">
+    <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+    <rdfs:comment xml:lang="en">Describes the preceision of the GPS signal. Smaller the value is, more precise the signal is.</rdfs:comment>
+    <rdfs:label xml:lang="en">Horizontal Dilution of Precision</rdfs:label>
+</owl:Class>
+
+<!--  http://purl.org/iot/vocab/m3-lite#CountStatellitesSignalReceived -->
+
+<owl:Class rdf:about="&mthreelite;CountStatellitesSignalReceived">
+    <rdfs:subClassOf rdf:resource="&mthreelite;Count"/>
+    <rdfs:comment xml:lang="en">Count of satellites from which a signal is received</rdfs:comment>
+    <rdfs:label xml:lang="en">Count Statellites Signal Received</rdfs:label>
+</owl:Class>
+
+<!--  http://purl.org/iot/vocab/m3-lite#CurrentSensor -->
+ 
+ <owl:Class rdf:about="&mthreelite;CurrentSensor">
+     <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+     <rdfs:comment xml:lang="en">A current sensor is a device that detects electric current in a wire, and generates a signal proportional to that current.</rdfs:comment>
+     <rdfs:label xml:lang="en">Current Sensor</rdfs:label>
+ </owl:Class>
+
+ <!-- http://purl.org/iot/vocab/m3-lite#TimeOfArrivalNextBus -->
+ <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#TimeOfArrivalNextBus">
+     <rdfs:subClassOf rdf:resource="http://purl.org/iot/vocab/m3-lite#TimeOfArrival"/>
+     <rdfs:comment xml:lang="en">Estimated time (in seconds) till a bus will arrive at a specific bus stop. </rdfs:comment>
+     <rdfs:label xml:lang="en">Time of arrival for the next bus</rdfs:label>
+ </owl:Class>
+
+ <!--http://purl.org/iot/vocab/m3-lite#TimeOfArrivalNextBusSensor -->
+ <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#TimeOfArrivalNextBusSensor">
+     <rdfs:subClassOf rdf:resource="http://purl.org/iot/vocab/m3-lite#TimeOfArrivalSensor"/>
+     <rdfs:comment xml:lang="en">Virtual device that represents a bus stop X and a bus line Y; it estimates the remaining time the next bus (belonging to line Y) will arrive at bus stop X. </rdfs:comment>
+     <rdfs:label xml:lang="en">Time of arrival sensor for the next bus</rdfs:label>
+ </owl:Class>
+
+ <!-- http://purl.org/iot/vocab/m3-lite#DistanceNextBus -->
+ <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#DistanceNextBus">
+     <rdfs:subClassOf rdf:resource="http://purl.org/iot/vocab/m3-lite#Distance"/>
+     <rdfs:comment xml:lang="en">Estimated driving distance (in meters) between a bus and the next bus stop. </rdfs:comment>
+     <rdfs:label xml:lang="en">Driving distance between a bus and the next bus stop</rdfs:label>
+ </owl:Class>
+
+ <!-- http://purl.org/iot/vocab/m3-lite#DistanceNextBusSensor -->
+ <owl:Class rdf:about="http://purl.org/iot/vocab/m3-lite#DistanceNextBusSensor">
+     <rdfs:subClassOf rdf:resource="http://purl.org/iot/vocab/m3-lite#DistanceSensor"/>
+     <rdfs:comment xml:lang="en"> Virtual device that represents a bus stop X and a bus line Y; it measures the driving distance between the next bus (belonging to line Y) and the bus stop X. </rdfs:comment>
+     <rdfs:label xml:lang="en">Sensor measuring the driving distance between a bus and the next bus stop</rdfs:label>
+ </owl:Class>
+
+
+
+ <!-- http://purl.org/iot/vocab/m3-lite#StayingPeopleCountSensor -->
+ <owl:Class rdf:about="&mthreelite;StayingPeopleCountSensor">
+     <rdfs:subClassOf rdf:resource="&mthreelite;PeopleCountSensor"/>
+     <rdfs:comment xml:lang="en">Device used to count the number of people that stays within an area for more than a threshold of time.</rdfs:comment>
+     <rdfs:label xml:lang="en">Staying People Count Sensor</rdfs:label>
+ </owl:Class>
+
+ <!-- http://purl.org/iot/vocab/m3-lite#CountPeopleStaying -->
+
+ <owl:Class rdf:about="&mthreelite;CountPeopleStaying">
+     <rdfs:subClassOf rdf:resource="&mthreelite;CountPeople"/>
+     <rdfs:comment xml:lang="en">Number of people that stayed within an area for more than a threshold of time.</rdfs:comment>
+     <rdfs:label xml:lang="en">Count People Staying</rdfs:label>
+ </owl:Class>
+
+ <!-- http://purl.org/iot/vocab/m3-lite#PeopleStayDurationSensor  -->
+
+ <owl:Class rdf:about="&mthreelite;PeopleStayDurationSensor">
+      <rdfs:subClassOf rdf:resource="&ssn;SensingDevice"/>
+      <rdfs:comment xml:lang="en">Device used to measure the time people stays within an area.</rdfs:comment>
+      <rdfs:label xml:lang="en">People Stay Duration Sensor</rdfs:label>
+  </owl:Class>
+
+  <!-- http://purl.org/iot/vocab/m3-lite#PeopleStayDurationAverage  -->
+
+  <owl:Class rdf:about="&mthreelite;PeopleStayDurationAverage">
+      <rdfs:subClassOf rdf:resource="&qu;QuantityKind"/>
+      <rdfs:comment xml:lang="en">Average time people stays within an area.</rdfs:comment>
+      <rdfs:label xml:lang="en">People Stay Duration Average </rdfs:label>
+  </owl:Class>
+
+  <!-- http://purl.org/iot/vocab/m3-lite#PeopleFlowCountSensor -->
+
+  <owl:Class rdf:about="&mthreelite;PeopleFlowCountSensor">
+      <rdfs:subClassOf rdf:resource="&mthreelite;PeopleCountSensor"/>
+      <rdfs:comment xml:lang="en">Device used to count the number of people the moves from an area towards another area during a time window.</rdfs:comment>
+      <rdfs:label xml:lang="en">People Flow Count Sensor</rdfs:label>
+  </owl:Class>
+
+  <!-- http://purl.org/iot/vocab/m3-lite#CountPeopleMoving -->
+
+  <owl:Class rdf:about="&mthreelite;CountPeopleMoving">
+      <rdfs:subClassOf rdf:resource="&mthreelite;CountPeople"/>
+      <rdfs:comment xml:lang="en">Number of people that moved outside an area towards another area during a time window.</rdfs:comment>
+      <rdfs:label xml:lang="en">Count People Moving</rdfs:label>
+  </owl:Class>
+
+
 
     <!-- http://www.onem2m.org/ontology/Base_Ontology/base_ontology#Device -->
 
@@ -6008,6 +6369,121 @@ A Value of a Thing can have meta data</rdfs:comment>
     </owl:Class>
     
 
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#Accuracy -->
+
+    <owl:Class rdf:about="&ssn;Accuracy">
+        <rdfs:subClassOf rdf:resource="&ssn;MeasurementProperty"/>
+        <dc:source>skos:exactMatch &apos;measurement accuracy/accuracy&apos; [VIM 2.13] 
+                            http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf</dc:source>
+        <rdfs:comment>The closeness of agreement between the value of an observation and the true value of the observed quality.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Accuracy</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#Frequency -->
+
+    <owl:Class rdf:about="&ssn;Frequency">
+        <rdfs:subClassOf rdf:resource="&ssn;MeasurementProperty"/>
+        <rdfs:comment>The smallest possible time between one observation and the next.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Frequency</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#Latency -->
+
+    <owl:Class rdf:about="&ssn;Latency">
+        <rdfs:subClassOf rdf:resource="&ssn;MeasurementProperty"/>
+        <rdfs:comment>The time between a request for an observation and the sensor providing a result.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Latency</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#MeasurementCapability -->
+
+    <owl:Class rdf:about="&ssn;MeasurementCapability">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="&ssn;hasMeasurementProperty"/>
+                <owl:allValuesFrom rdf:resource="&ssn;MeasurementProperty"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <dc:source>Similar idea to MeasurementCapability in MMI Device Ontology
+                                  http://marinemetadata.org/community/teams/ontdevices
+
+But the the two express the relationship between constraints and multiple measurement properties differently.
+
+The conditions linked to a MeasurementCapability are skos:exactMatch to &apos;influence quantity&apos; [VIM 2.52]
+http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf</dc:source>
+        <rdfs:comment>Collects together measurement properties (accuracy, range, precision, etc) and the environmental conditions in which those properties hold, representing a specification of a sensor&apos;s capability in those conditions.
+
+The conditions specified here are those that affect the measurement properties, while those in OperatingRange represent the sensor&apos;s standard operating conditions, including conditions that don&apos;t affect the observations.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Measurement Capability</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#MeasurementProperty -->
+
+    <owl:Class rdf:about="&ssn;MeasurementProperty">
+        <rdfs:comment>An identifiable and observable characteristic of a sensor&apos;s observations or ability to make observations.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Measurement  Property</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#Precision -->
+
+    <owl:Class rdf:about="&ssn;Precision">
+        <rdfs:subClassOf rdf:resource="&ssn;MeasurementProperty"/>
+        <dc:source>skos:exactMatch &apos;measurement precision/precision&apos; [VIM 2.15]
+                                   http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf</dc:source>
+        <rdfs:comment>The closeness of agreement between replicate observations on an unchanged or similar quality value: i.e., a measure of a sensor&apos;s ability to consitently reproduce an observation.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Precision</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#Resolution -->
+
+    <owl:Class rdf:about="&ssn;Resolution">
+        <rdfs:subClassOf rdf:resource="&ssn;MeasurementProperty"/>
+        <dc:source>skos:exactMatch &apos;resolution&apos; [VIM 4.14]
+                                  http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf</dc:source>
+        <rdfs:comment>The smallest difference in the value of a quality being observed that would result in perceptably different values of observation results.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Resolution</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
+
+
+    <!-- http://purl.oclc.org/NET/ssnx/ssn#ResponseTime -->
+
+    <owl:Class rdf:about="&ssn;ResponseTime">
+        <rdfs:subClassOf rdf:resource="&ssn;MeasurementProperty"/>
+        <dc:source>skos:exactMatch &apos;step response time&apos; [VIM 4.23]
+                                  http://www.bipm.org/utils/common/documents/jcgm/JCGM_200_2008.pdf</dc:source>
+        <rdfs:comment>The time between a (step) change inthe value of an observed quality and a sensor (possibly with specified error) &apos;settling&apos; on an observed value.</rdfs:comment>
+        <rdfs:isDefinedBy>http://purl.oclc.org/NET/ssnx/ssn</rdfs:isDefinedBy>
+        <rdfs:label>Response time</rdfs:label>
+        <rdfs:seeAlso>http://www.w3.org/2005/Incubator/ssn/wiki/SSN_Sensor#MeasuringCapability</rdfs:seeAlso>
+    </owl:Class>
+    
 
     <!-- http://www.w3.org/2006/time#Instant -->
 

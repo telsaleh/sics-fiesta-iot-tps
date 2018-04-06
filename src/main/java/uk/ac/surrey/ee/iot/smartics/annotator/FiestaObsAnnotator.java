@@ -119,6 +119,7 @@ public class FiestaObsAnnotator {
 
                     try {
                         observationClass = ontModel.getOntResource(SSN_PREFIX + "Observation").asClass(); //ok
+//                        System.out.println(M3_LITE_PREFIX+ob.getIotType());
                         sensingDevClass = ontModel.getOntResource(M3_LITE_PREFIX + ob.getIotType()).asClass(); //ok
                         sensorOutputClass = ontModel.getOntResource(SSN_PREFIX + "SensorOutput").asClass(); //ok
                         observationValueClass = ontModel.getOntResource(SSN_PREFIX + "ObservationValue").asClass(); //ok
