@@ -39,6 +39,7 @@ build/
 #####################
 **/jboss-web.xml
 **/nb-configuration.xml
+**/nbactions.xml
 *~
 
 

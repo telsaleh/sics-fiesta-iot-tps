@@ -16,8 +16,8 @@ import org.restlet.resource.ClientResource;
 import org.restlet.resource.Get;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
-import uk.ac.surrey.ee.iot.smartics.annotator.FiestaResAnnotator;
-import uk.ac.surrey.ee.iot.smartics.model.proprietary.Resources;
+import uk.ac.surrey.ee.iot.smartics.annotator.fiesta.FiestaResAnnotator;
+import uk.ac.surrey.ee.iot.smartics.model.data.ics.Resources;
 
 public class ResourceHandler extends ServerResource {
 
