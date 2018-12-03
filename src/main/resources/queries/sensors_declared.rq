@@ -1,0 +1,6 @@
+PREFIX ssn: <http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#>
+PREFIX mthreelite: <http://purl.org/iot/vocab/m3-lite#>
+SELECT *
+WHERE {
+  ?s a mthreelite:EnergyMeter.
+}order by asc(UCASE(str(?s)))

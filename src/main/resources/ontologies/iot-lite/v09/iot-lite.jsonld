@@ -1,0 +1,279 @@
+{
+  "@context" : {
+    "domain" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#domain",
+      "@type" : "@id"
+    },
+    "range" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#range",
+      "@type" : "@id"
+    },
+    "subClassOf" : {
+      "@id" : "http://www.w3.org/2000/01/rdf-schema#subClassOf",
+      "@type" : "@id"
+    },
+    "comment" : "http://www.w3.org/2000/01/rdf-schema#comment",
+    "unionOf" : {
+      "@id" : "http://www.w3.org/2002/07/owl#unionOf",
+      "@type" : "@id"
+    },
+    "RelativeLocation" : "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#RelativeLocation",
+    "altRelative" : "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#altRelative",
+    "alt" : "http://www.w3.org/2003/01/geo/wgs84_pos#alt",
+    "lat" : "http://www.w3.org/2003/01/geo/wgs84_pos#lat",
+    "long" : "http://www.w3.org/2003/01/geo/wgs84_pos#long",
+    "label" : "http://www.w3.org/2000/01/rdf-schema#label",
+    "versionInfo" : "http://www.w3.org/2002/07/owl#versionInfo",
+    "first" : {
+      "@id" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#first",
+      "@type" : "@id"
+    },
+    "rest" : {
+      "@id" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest",
+      "@type" : "@id"
+    },
+    "geo" : "http://www.w3.org/2003/01/geo/wgs84_pos#",
+    "" : "http://www.semanticweb.org/owl/owlapi/turtle#",
+    "iot-lite" : "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
+    "qu" : "http://purl.org/NET/ssnx/qu/qu#",
+    "owl" : "http://www.w3.org/2002/07/owl#",
+    "rdf" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "xsd" : "http://www.w3.org/2001/XMLSchema#",
+    "rdfs" : "http://www.w3.org/2000/01/rdf-schema#",
+    "time" : "http://www.w3.org/2006/time#",
+    "ssn" : "http://purl.oclc.org/NET/ssnx/ssn#"
+  },
+  "@graph" : [ {
+    "@id" : "_:b0",
+    "@type" : "owl:Class",
+    "unionOf" : {
+      "@list" : [ "iot-lite:Attribute", "ssn:Sensor" ]
+    }
+  }, {
+    "@id" : "_:b3",
+    "@type" : "owl:Class",
+    "unionOf" : {
+      "@list" : [ "iot-lite:Object", "iot-lite:Service" ]
+    }
+  }, {
+    "@id" : "http://purl.oclc.org/NET/UNIS/fiware/iot-lite#",
+    "@type" : "owl:Ontology",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "iot-lite is a lightweight ontology based on SSN to describe Internet of Things (IoT) concepts and relationships."
+    },
+    "label" : "iot-lite",
+    "versionInfo" : "0.2"
+  }, {
+    "@id" : "iot-lite:ActuatingDevice",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "Device that can actuate over an object or QuantityKind."
+    },
+    "subClassOf" : "ssn:Device"
+  }, {
+    "@id" : "iot-lite:Attribute",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "An attribute of an IoT object that can be exposed by an IoT service (i.e. a room (IoT Object) has a temperature (Attribute), that can be exposed by a temperature sensor (IoT device)."
+    }
+  }, {
+    "@id" : "iot-lite:Circle",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "Circle coverage it needs the location of the sensor as the centre of the circle and the radius as a DataProperty."
+    },
+    "subClassOf" : "iot-lite:Coverage"
+  }, {
+    "@id" : "iot-lite:Coverage",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "The coverage of an IoT device (i.e. a temperature sensor inside a room has a coverage of that room)."
+    }
+  }, {
+    "@id" : "iot-lite:Metadata",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "Class used to describe properties that cannot be described by QuantityKind and Units. i.e. the resolution of a sensor."
+    }
+  }, {
+    "@id" : "iot-lite:Object",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "IoT entity"
+    }
+  }, {
+    "@id" : "iot-lite:Polygon",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "The coverage is made up by linking several points by strait lines."
+    },
+    "subClassOf" : "iot-lite:Coverage"
+  }, {
+    "@id" : "iot-lite:Rectangle",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "Teh coverage is made up by giving two points which are the oposite corners of a rentangle."
+    },
+    "subClassOf" : "iot-lite:Coverage"
+  }, {
+    "@id" : "iot-lite:RelativeLocation",
+    "@type" : "owl:AnnotationProperty",
+    "domain" : "geo:Point"
+  }, {
+    "@id" : "iot-lite:Service",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "Service provided by an IoT Device"
+    }
+  }, {
+    "@id" : "iot-lite:TagDevice",
+    "@type" : "owl:Class",
+    "comment" : {
+      "@language" : "en",
+      "@value" : "Tag Device such as QR code or bar code."
+    },
+    "subClassOf" : "ssn:Device"
+  }, {
+    "@id" : "iot-lite:altRelative",
+    "@type" : "owl:AnnotationProperty",
+    "domain" : "geo:Point",
+    "range" : "xsd:string"
+  }, {
+    "@id" : "iot-lite:description",
+    "@type" : "owl:DatatypeProperty",
+    "domain" : "_:b3",
+    "range" : "xsd:anyURI"
+  }, {
+    "@id" : "iot-lite:endpoint",
+    "@type" : "owl:DatatypeProperty",
+    "domain" : "iot-lite:Service",
+    "range" : "xsd:anyURI"
+  }, {
+    "@id" : "iot-lite:exposedBy",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "ssn:Device",
+    "range" : "iot-lite:Service"
+  }, {
+    "@id" : "iot-lite:hasAttribute",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "iot-lite:Object",
+    "range" : "iot-lite:Attribute"
+  }, {
+    "@id" : "iot-lite:hasCoverage",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "ssn:Device",
+    "range" : "iot-lite:Coverage"
+  }, {
+    "@id" : "iot-lite:hasMetadata",
+    "@type" : "owl:ObjectProperty",
+    "range" : "iot-lite:Metadata"
+  }, {
+    "@id" : "iot-lite:hasPoint",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "iot-lite:Coverage",
+    "range" : "geo:Point"
+  }, {
+    "@id" : "iot-lite:hasQuantityKind",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "_:b0",
+    "range" : "qu:QuantityKind"
+  }, {
+    "@id" : "iot-lite:hasSensingDevice",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "ssn:Sensor",
+    "range" : "ssn:SensingDevice"
+  }, {
+    "@id" : "iot-lite:hasUnit",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "ssn:Sensor",
+    "range" : "qu:Unit"
+  }, {
+    "@id" : "iot-lite:id",
+    "@type" : "owl:DatatypeProperty",
+    "domain" : "ssn:Device",
+    "range" : "xsd:string"
+  }, {
+    "@id" : "iot-lite:isAssociatedWith",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "iot-lite:Attribute",
+    "range" : "ssn:Device"
+  }, {
+    "@id" : "iot-lite:radius",
+    "@type" : "owl:DatatypeProperty",
+    "domain" : "iot-lite:Circle"
+  }, {
+    "@id" : "iot-lite:type",
+    "@type" : "owl:DatatypeProperty",
+    "range" : "xsd:string"
+  }, {
+    "@id" : "iot-lite:value",
+    "@type" : "owl:DatatypeProperty"
+  }, {
+    "@id" : "qu:QuantityKind",
+    "@type" : "owl:Class"
+  }, {
+    "@id" : "qu:Unit",
+    "@type" : "owl:Class"
+  }, {
+    "@id" : "geo:Point",
+    "@type" : "owl:Class",
+    "RelativeLocation" : "",
+    "altRelative" : "",
+    "alt" : "",
+    "lat" : "",
+    "long" : ""
+  }, {
+    "@id" : "geo:alt",
+    "@type" : "owl:AnnotationProperty",
+    "domain" : "geo:Point"
+  }, {
+    "@id" : "geo:hasLocation",
+    "@type" : "owl:ObjectProperty",
+    "range" : "geo:Point"
+  }, {
+    "@id" : "geo:lat",
+    "@type" : "owl:AnnotationProperty",
+    "domain" : "geo:Point"
+  }, {
+    "@id" : "geo:long",
+    "@type" : "owl:AnnotationProperty",
+    "domain" : "geo:Point"
+  }, {
+    "@id" : "ssn:Deployment",
+    "@type" : "owl:Class"
+  }, {
+    "@id" : "ssn:Device",
+    "@type" : "owl:Class",
+    "subClassOf" : "ssn:System"
+  }, {
+    "@id" : "ssn:SensingDevice",
+    "@type" : "owl:Class",
+    "subClassOf" : [ "ssn:Sensor", "ssn:Device" ]
+  }, {
+    "@id" : "ssn:Sensor",
+    "@type" : "owl:Class"
+  }, {
+    "@id" : "ssn:System",
+    "@type" : "owl:Class"
+  }, {
+    "@id" : "ssn:hasDeployment",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "ssn:Device",
+    "range" : "ssn:Deployment"
+  }, {
+    "@id" : "ssn:hasSubsystem",
+    "@type" : "owl:ObjectProperty",
+    "domain" : "ssn:System",
+    "range" : "ssn:System"
+  } ]  
+}
