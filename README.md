@@ -1,6 +1,8 @@
 # FIESTA-IoT Testbed Provider Service (TPS)
 
-This is the reference implementation of the TPS for federating the SmartICS Testbed at the University of Surrey.
+This is the reference implementation of the TPS for federating the SmartICS Testbed at the University of Surrey with the FIESTA-IoT Platform. 
+
+The service is also available for independent data consumers, but must comply with the API specification defined below. Data is currently represented only in JSON-LD.
 
 ## API specification  
 
@@ -12,6 +14,8 @@ This is the reference implementation of the TPS for federating the SmartICS Test
 * [getObservation](#getobservation)  
 
 ## getAllResources 
+
+This method allows a data consumer to retrieve a list of all registered resources.  
 
 ``` 
 GET http://{hostname}/fiesta-iot/registry/getAllResources 
@@ -171,8 +175,10 @@ Response (example):
 
 ``` 
 
-## getResource (dereferenceable)
-
+## getResource (dereferenceable)  
+  
+This method allows the retrieval of a resource description.  
+  
 ```  
 GET http://{hostname}/fiesta-iot/resource/{resourceId}
 ```  
