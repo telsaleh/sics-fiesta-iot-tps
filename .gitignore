@@ -1,4 +1,4 @@
-# Compiled source #
+# Compiled source # 
 ###################
 *.class
 
@@ -39,7 +39,8 @@ build/
 #####################
 **/jboss-web.xml
 **/nb-configuration.xml
-**/nbactions.xml
+**/nbactions.xml 
+nbactions.xml
 *~
 
 
