@@ -4,7 +4,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.restlet.Client;
@@ -24,66 +27,74 @@ import uk.ac.surrey.ee.iot.smartics.model.data.ics.Observations;
 
 public class TpsHandler extends ServerResource {
 
-    public String sicsURL = "http://131.227.88.96:5000/";
-    public String getLastObservations = "getLastObservations";
-    public String getObservations = "getObservations";
+    protected String brokerHostUrl = "";
+    protected Properties prop = new Properties();
+    protected String configPath = "config/broker.properties";
 
-//    @Get("txt")
-//    public String toString() {
-//        return "Account of user \"" + "TEST" + "\"";
-//    }
-    
     @Post
     public Representation handlePost(Representation entity) throws IOException {
-        
+
         String request = "";
-        try{
-        request = getRequest().getResourceRef().getPath();
-        }catch (NullPointerException e){
-        request = "getLastObservations";
+        try {
+            request = getRequest().getResourceRef().getPath();
+        } catch (NullPointerException e) {
+            request = "/getLastObservations";
         }
-//        System.out.println("HI:"+ request);
-        if (request.endsWith(getLastObservations))
-                sicsURL = sicsURL + getLastObservations;
-        else 
-                sicsURL = sicsURL + getObservations;
+
+        try {
+            InputStream inputStream;
+            inputStream = getClass().getClassLoader().getResourceAsStream(configPath);
+
+            if (inputStream != null) {
+                prop.load(inputStream);
+            } else {
+                throw new FileNotFoundException("property file '" + configPath + "' not found in the classpath");
+            }
+            brokerHostUrl = prop.getProperty("url.host.broker");
+        } catch (IOException e) {
+            e.getMessage();
+        }
+        String gloSuffixPath = prop.getProperty("url.path.broker.tps.get_last_observations");
+        String goSuffixPath = prop.getProperty("url.path.broker.tps.get_observations");
+        if (request.endsWith(gloSuffixPath)) {
+            brokerHostUrl = brokerHostUrl + gloSuffixPath;
+        } else {
+            brokerHostUrl = brokerHostUrl + goSuffixPath;
+        }
 
         String tpsRequest = entity.getText();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String result = getSmartIcsObservation(tpsRequest);
-        
+        String result = getSicsObservation(tpsRequest);
+
         StringRepresentation response = new StringRepresentation(result);
         response.setMediaType(MediaType.valueOf("application/ld+json"));
         response.setCharacterSet(null);
 
-
         return response;
     }
 
-    public String getSmartIcsObservation(String tpsRequest) {
-        
-//        System.out.println("client external TPS request payload:\n" + tpsRequest);
+    public String getSicsObservation(String tpsRequest) {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        
+
         TpsRequest tpsReq = new TpsRequest();
-        
+
         try {
             tpsReq = objectMapper.readValue(tpsRequest, TpsRequest.class);
         } catch (IOException ex) {
             Logger.getLogger(TpsHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         int tpsSize = tpsReq.getSensorIDs().size();
-         for (int i=0; i<tpsSize; i++) {
-             
-             String [] uriSplit = tpsReq.getSensorIDs().get(i).split(FiestaResAnnotator.INDV_NS_PREFIX+FiestaResAnnotator.sensingDevNamePrefix);
-             tpsReq.getSensorIDs().set(i, uriSplit[1]);
-         }
-         
+        for (int i = 0; i < tpsSize; i++) {
+
+            String[] uriSplit = tpsReq.getSensorIDs().get(i).split(FiestaResAnnotator.INDV_NS_PREFIX + FiestaResAnnotator.sensingDevNamePrefix);
+            tpsReq.getSensorIDs().set(i, uriSplit[1]);
+        }
+
         try {
             tpsRequest = objectMapper.writeValueAsString(tpsReq);
         } catch (JsonProcessingException ex) {
@@ -94,11 +105,10 @@ public class TpsHandler extends ServerResource {
         Client client = new Client(new Context(), Protocol.HTTP);
         client.getContext().getParameters().add("maxConnectionsPerHost", "5");
         client.getContext().getParameters().add("maxTotalConnections", "5");
-        client.getContext().getParameters().add("socketTimeout", "120000"); 
-        final ClientResource smartIcsClientResource = new ClientResource(context, sicsURL);
+        client.getContext().getParameters().add("socketTimeout", prop.getProperty("client.socket.timeout"));
+        final ClientResource smartIcsClientResource = new ClientResource(context, brokerHostUrl);
         smartIcsClientResource.setNext(client);
         smartIcsClientResource.accept(MediaType.APPLICATION_JSON);
-//        System.out.println("formatted local TPS request payload: " + tpsRequest);
         String errorMessage = "";
         try {
             Representation result = smartIcsClientResource
@@ -121,6 +131,6 @@ public class TpsHandler extends ServerResource {
         }
         return errorMessage;
 
-    }    
+    }
 
 }
