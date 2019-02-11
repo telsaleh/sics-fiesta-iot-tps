@@ -4,12 +4,12 @@ This is the reference implementation of the TPS for federating the SmartICS Test
 
 ## API specification  
 
-* [getAllResources](https://gist.github.com/UniSurreyIoT/afcb20056d37d4362449796d72775476#getallresources)  
-* [getResource](https://gist.github.com/UniSurreyIoT/afcb20056d37d4362449796d72775476#getresource-dereferenceable)  
-* [getLastObservations](https://gist.github.com/UniSurreyIoT/afcb20056d37d4362449796d72775476#getlastobservations)  
-* [getLastObservation](https://gist.github.com/UniSurreyIoT/afcb20056d37d4362449796d72775476#getlastobservation)  
-* [getObservations](https://gist.github.com/UniSurreyIoT/afcb20056d37d4362449796d72775476#getobservations)  
-* [getObservation](https://gist.github.com/UniSurreyIoT/afcb20056d37d4362449796d72775476#getobservation)  
+* [getAllResources](#getallresources)  
+* [getResource](#getresource-dereferenceable)  
+* [getLastObservations](#getlastobservations)  
+* [getLastObservation](#getlastobservation)  
+* [getObservations](#getobservations)  
+* [getObservation](#getobservation)  
 
 ## getAllResources 
 
