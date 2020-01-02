@@ -1,10 +1,6 @@
 package uk.ac.surrey.ee.iot.smartics.annotator.fiesta;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import javax.xml.bind.JAXBException;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ontology.Individual;
 import org.apache.jena.ontology.OntClass;
@@ -26,9 +22,7 @@ import uk.ac.surrey.ee.iot.smartics.model.data.ics.Resources;
 public class FiestaResAnnotator {
 
     //reference ontologies
-//    public String FIESTA_ONT_FILE_RUN = "file:///C://Users/te0003/Documents/NetBeansProjects/SmartICS/src/main/webapp/ontologies/fiesta-iot/fiesta-iot.owl";
-//    public String FIESTA_ONT_FILE_DEPLOY = "/ontologies/fiesta-iot/fiesta-iot.owl";
-      public String BASE_ONTOLOGY = "/ontologies/fiesta_iot/fiesta-iot.owl";
+    public String BASE_ONTOLOGY = "/ontologies/fiesta_iot/fiesta-iot.owl";
 
     //prefixes
     public static String INDV_NS_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/";
@@ -42,10 +36,9 @@ public class FiestaResAnnotator {
     public String qkPrefix = "qk#";
     public String unitPrefix = "unit#";
     public String locNamePrefix = "loc#";
-    public String servNamePrefix = "service#";
+//    public String servNamePrefix = "service#";
     public String servPathPrefix = "service/";
 
-//    public String ENDPOINT_PREFIX = "http://smart-ics.ee.surrey.ac.uk/fiesta-iot/service/";
     //location
     public String LOCATION = "UNIVERSITY_OF_SURREY-";
     public String RELATIVE_LOCATION = "http://sws.geonames.org/6695971/";
@@ -57,11 +50,6 @@ public class FiestaResAnnotator {
 
         //instantiate models
         String ontFilePath = "";
-//        try {
-//            ontFilePath = DefaultServletListener.servletContext.getRealPath(FIESTA_ONT_FILE_DEPLOY);
-//        } catch (NoClassDefFoundError fe) {
-//            ontFilePath = FIESTA_ONT_FILE_RUN;
-//        }
         ontFilePath = getClass().getResource(BASE_ONTOLOGY).toString();
         Model tpsModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
         Model fiestaOnt = FileManager.get().loadModel(ontFilePath);
@@ -79,6 +67,7 @@ public class FiestaResAnnotator {
             String GEO_PREFIX = fiestaOnt.getNsPrefixURI("geo");
             String DUL_PREFIX = ontModel.getNsPrefixURI("dul");
             String TIME_PREFIX = ontModel.getNsPrefixURI("time");
+            
             //classes
             OntClass deviceClass = null;
             OntClass sensingDevClass = null;
@@ -91,6 +80,7 @@ public class FiestaResAnnotator {
             OntClass doiClass = null;
             OntClass serviceClass = null;
             OntClass coverageClass = null;
+            
             //properties
             Property isSubSystemOf = null;
             Property hasSubSystem = null;
@@ -236,5 +226,5 @@ public class FiestaResAnnotator {
 
         return sicsAnnotated;
     }
-    
+
 }

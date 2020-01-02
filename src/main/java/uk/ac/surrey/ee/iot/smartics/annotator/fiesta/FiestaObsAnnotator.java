@@ -4,11 +4,7 @@
  */
 package uk.ac.surrey.ee.iot.smartics.annotator.fiesta;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import javax.xml.bind.JAXBException;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import static org.apache.jena.datatypes.xsd.XSDDatatype.XSDdateTime;
 import org.apache.jena.ontology.Individual;
